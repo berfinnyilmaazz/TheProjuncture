@@ -22,6 +22,48 @@ export const projectApiSlice = apiSlice.injectEndpoints({
         credentials: 'include',
       }),
     }),
+
+    joinProject: builder.mutation({
+      query: (id) => ({
+        url: `/projects/join/${id}`,
+        method: 'POST',
+        credentials: 'include',
+      }),
+    }),
+    
+    approveJoinRequest: builder.mutation({
+      query: ({ id, userId }) => ({
+        url: `/projects/join/approve/${id}`,
+        method: 'PUT',
+        body: { userId },
+        credentials: 'include',
+      }),
+    }),
+
+    getPendingRequests: builder.query({
+      query: (id) => ({
+        url: `/projects/join/pending/${id}`,
+        credentials: "include",
+      }),
+    }),
+
+    rejectJoinRequest: builder.mutation({
+      query: ({ id, userId }) => ({
+        url: `/projects/join/reject/${id}`,
+        method: "PUT",
+        body: { userId },
+        credentials: "include",
+      }),
+    }),
+
+    getAssignableUsers: builder.query({
+      query: (id) => ({
+        url: `/projects/${id}/assignable-users`,
+        credentials: "include", // EKLENMELİ!
+      }),
+    }),      
+    
+    
   }),
 });
 
@@ -30,4 +72,9 @@ export const {
   useGetAllProjectsQuery,
   useGetProjectByIdQuery,
   useGetMyProjectsQuery,
+  useApproveJoinRequestMutation,
+  useJoinProjectMutation,
+  useGetPendingRequestsQuery,
+  useRejectJoinRequestMutation,
+  useGetAssignableUsersQuery
 } = projectApiSlice;

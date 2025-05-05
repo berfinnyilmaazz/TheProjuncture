@@ -11,6 +11,9 @@ const projectSchema = new mongoose.Schema({
   requiredSkills: { type: String, required: false },
   likes: { type: Number, default: 0 },
   image: { type: String, default: "" },
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  pendingJoinRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+
   
 }, { timestamps: true });
 

@@ -9,6 +9,7 @@ import Loading from '../components/Loading';
 import { useLoginMutation, useRegisterMutation } from '../redux/slices/api/authApiSlice';
 import { setCredentials } from '../redux/slices/authSlice.js';
 import { toast } from 'sonner';
+import { Toaster } from 'sonner';
 import RegisterModal from "../components/RegisterModal"; // yol doğruysa
 
 
@@ -36,8 +37,13 @@ const Login = () => {
       navigate("/");
 
     } catch (error) {
-      console.log(error);
-      toast.error(error?.data?.message || error.message);
+      console.error(error);
+  
+      if (error?.status === 401) {
+        toast.error("E-mail veya şifre yanlış!");
+      } else {
+        toast.error(error?.data?.message || "Bir hata oluştu. Lütfen tekrar deneyin.");
+      }
     }
   };
 
@@ -49,6 +55,7 @@ const Login = () => {
 
   return (
   <div className='w-full min-h-screen flex items-center justify-center flex-col lg:flex-row bg-[#f3f4f6]'>
+  <Toaster position="top-center" richColors />
     <div className='w-full md:w-auto flex gap-0 md:gap-40 flex-col md:flex-row items-center justify-center'>
       {/* left side */}
       <div className='h-full w-full lg:w-2/3 flex flex-col items-center justify-center'>

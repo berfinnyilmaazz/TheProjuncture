@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import User from "../models/user.js"
+import Project from "../models/project.js";
 
 const protectRoute = async(req, res, next) => {
     try{
@@ -43,4 +44,34 @@ const isAdminRoute = (req, res, next) => {
     }
 };
 
-export { isAdminRoute, protectRoute };
+const isProjectMemberOrOwner = async (req, res, next) => {
+  try {
+    const { projectId } = req.body;
+
+    if (!projectId) {
+      return res.status(400).json({ message: "projectId is required" });
+    }
+
+    const project = await Project.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    const userId = req.user.userId;
+
+    const isOwner = project.owner.toString() === userId;
+    const isMember = project.members.map(id => id.toString()).includes(userId);
+
+    if (isOwner || isMember) {
+      next();
+    } else {
+      return res.status(403).json({ message: "Only project owner or members can create tasks." });
+    }
+  } catch (error) {
+    console.error("Authorization error:", error);
+    res.status(500).json({ message: "Server error during authorization check." });
+  }
+};
+
+export { isAdminRoute, protectRoute, isProjectMemberOrOwner };

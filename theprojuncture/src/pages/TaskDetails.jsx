@@ -41,8 +41,8 @@ const bgColor = {
 };
 
 const TABS = [
-  { title: "Task Detail", icon: <FaTasks /> },
-  { title: "Activities/Timeline", icon: <RxActivityLog /> },
+  { title: "Task Detay", icon: <FaTasks /> },
+  { title: "Activiteler/Timeline", icon: <RxActivityLog /> },
 ];
 
 const TASKTYPEICON = {
@@ -101,6 +101,7 @@ const TaskDetails = () => {
       </div>
     )
   };
+  
 
   return (
     <div className="w-full flex flex-col gap-3 mb-4 overflow-y-hidden">
@@ -126,7 +127,7 @@ const TaskDetails = () => {
               </div>
               <div className={clsx("flex items-center gap-2")}>
               <div className={clsx("w-4 h-4 rounded-full",
-                TASK_TYPE[task.stage]
+                TASK_TYPE[task?.stage]
               )}
               />
               <span className='text-black uppercase'>{task?.stage}</span>
@@ -134,26 +135,26 @@ const TaskDetails = () => {
           </div>
 
             <p className="text-gray-500">
-              Created At: {new Date(task?.date).toDateString()}
+              Yayınlandı: {new Date(task?.date).toDateString()}
             </p>
 
-              <div className='flex items-center gap-8 p-4 border-y border-gray-200'>
-                <div className='space-x-2'>
+              {/* <div className='flex items-center gap-8 p-4 border-y border-gray-200'> */}
+                {/* <div className='space-x-2'>
                   <span className='font-semibold'>Assets :</span>
                   <span>{task?.assets?.length}</span>
-                </div>
+                </div> */}
 
-                <span className='text-gray-400'>|</span>
+                {/* <span className='text-gray-400'>|</span> */}
 
-                <div className='space-x-2'>
+                {/* <div className='space-x-2'>
                   <span className='font-semibold'>Sub-Task :</span>
                   <span>{task?.subTasks?.length}</span>
-                </div>
-              </div> 
+                </div> */}
+              {/* </div>  */}
 
               <div className="space-y-4 py-6">
                 <p className="text-gray-600 font-semibold test-sm">
-                  TASK TEAM  
+                  EKİP 
                 </p>
                 <div className="space-y-3">
                   {task?.team?.map((m,index) => (
@@ -173,14 +174,14 @@ const TaskDetails = () => {
 
                         <div>
                           <p className="text-lg font-semibold">{m?.name}</p>
-                          <span className="text-gray-500">{m.title}</span>
+                          <span className="text-gray-500">{m?.title}</span>
                         </div>
                     </div>
                   ))}  
                 </div>  
               </div>
 
-              <div className="space-y-4 py-6">
+              {/* <div className="space-y-4 py-6">
                 <p className="text-gray-500 font-semibold text-sm">
                   SUB-TASKS
                 </p>
@@ -208,12 +209,12 @@ const TaskDetails = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
           </div>
 
           {/* RIGHT */}
           <div className="w-full md:w-1/2 space-y-8">
-          <p className="text-lg font-semibold">ASSETS</p>
+          {/* <p className="text-lg font-semibold">ASSETS</p>
 
           <div className="w-full grid grid-cols-2 gap-4">
             {task?.assets?.map((el, index) => (
@@ -224,7 +225,7 @@ const TaskDetails = () => {
               className="w-full rounded h-28 md:h-36 2xl:h-52 cursor-pointer transition-all duration-700 hover:scale-125 hover:z-50"
               />
             ))}
-          </div>
+          </div> */}
             
           </div>
         </div>
@@ -307,7 +308,7 @@ const Activities =({activity, id, refetch}) => {
   return (
   <div className='w-full flex gap-10 2xl:gap-20 min-h-screen px-10 py-8 bg-white shadow rounded-md justify-between overflow-y-auto'>
     <div className="w-full md:w-1/2">
-    <h4 className='text-gray-600 font-semibold text-lg mb-5'>Activities</h4>
+    <h4 className='text-gray-600 font-semibold text-lg mb-5'>Activiteler</h4>
       <div className='w-full'>
         {activity?.map((el, index) => (
           <Card
@@ -321,7 +322,7 @@ const Activities =({activity, id, refetch}) => {
 
     <div className="w-full md:w-1/3">
     <h4 className='text-gray-600 font-semibold text-lg mb-5'>
-          Add Activity
+          Activite Ekle
         </h4>
         <div className='w-full flex flex-wrap gap-5'>
           {act_types.map((item, index) => (
@@ -339,7 +340,7 @@ const Activities =({activity, id, refetch}) => {
             rows={10}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder='Type ......'
+            placeholder='......'
             className='bg-white w-full mt-10 border border-gray-300 outline-none p-4 rounded-md focus:ring-2 ring-blue-500'
           ></textarea>
           {isLoading ? (
@@ -347,7 +348,7 @@ const Activities =({activity, id, refetch}) => {
           ) : (
             <Button
               type='button'
-              label='Submit'
+              label='Ekle'
               onClick={handleSubmit}
               className='bg-blue-600 text-white rounded'
             />

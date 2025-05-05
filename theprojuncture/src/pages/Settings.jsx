@@ -368,7 +368,7 @@ export default function Profile() {
                                         </div>
 
                                         {/* Notification Settings */}
-                                        <div className="p-6 bg-gray-50 rounded-lg space-y-4">
+                                        {/* <div className="p-6 bg-gray-50 rounded-lg space-y-4">
                                             <h4 className="text-lg font-medium text-gray-900">Bildirim Ayarları</h4>
                                             <div className="space-y-4">
                                                 <label className="flex items-center space-x-3">
@@ -384,7 +384,7 @@ export default function Profile() {
                                                     <span className="text-gray-700">Yeni Mesaj Bildirimleri</span>
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                         {/* Privacy Settings */}
                                         <form onSubmit={handleProfileSubmit(onProfileUpdate)} className="space-y-6">

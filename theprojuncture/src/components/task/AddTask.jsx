@@ -12,6 +12,7 @@ import {app} from "../../utils/firebase";
 import { useCreateTaskMutation, useUpdateTaskMutation } from '../../redux/slices/api/taskApiSlice.js';
 import { toast } from "sonner";
 import { dateFormatter } from '../../utils/index.js';
+import { useGetAssignableUsersQuery } from '../../redux/slices/api/projectApiSlice.js';
 
  
 
@@ -20,7 +21,10 @@ const PRIORITY = ["HIGH", "MEDIUM", "NORMAL", "LOW"];
 
 const uploadedFileURLs = [];
 
-const AddTask = ({open, setOpen, task}) => {
+const AddTask = ({open, setOpen, task, project}) => {
+
+  const [selected, setSelected] = useState("");
+
 
   const defaultValues = {
     title: task?.title || "",
@@ -30,6 +34,12 @@ const AddTask = ({open, setOpen, task}) => {
     priority: "",
     assets: [],
   };
+
+  // const assignableUsers = [
+  //   ...(project?.members || []),
+  //   project?.owner
+  // ];
+  
 
     const {
         register, 
@@ -67,6 +77,7 @@ const AddTask = ({open, setOpen, task}) => {
       try {
         const newData = {
           ...data,
+          projectId: project?._id, // <--- Bunu ekle!
           assets: [ ...URLS, ...uploadedFileURLs],
           team,
           stage,
@@ -99,7 +110,7 @@ const AddTask = ({open, setOpen, task}) => {
       const name = new Date().getTime() + file.name;
       const storageRef = ref(storage, name);
 
-      const uploadTask = uploadBytesResumble(storageRef, file);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
       return new Promise((resolve, reject) => {
         uploadTask.on(
@@ -120,6 +131,8 @@ const AddTask = ({open, setOpen, task}) => {
         );
       });
     };
+
+    console.log(project?._id)
 
   return (
     <>
@@ -143,11 +156,16 @@ const AddTask = ({open, setOpen, task}) => {
               error={errors.title ? errors.title.message : ""}
             />
 
-            <UserList setTeam={setTeam} team={team} />
+            <UserList
+              team={team}
+              setTeam={setTeam}
+              projectId={project?._id}
+            />
 
             <div className='flex gap-4'>
               <SelectList
                 label='Task Stage'
+                //lists={assignableUsers.map(user => `${user.name} - ${user.title}`)}
                 lists={LISTS}
                 selected={stage}
                 setSelected={setStage}

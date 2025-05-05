@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useGetAllUsersQuery } from '../redux/slices/api/userApiSlice';
+import { useGetAllProjectsQuery } from '../redux/slices/api/projectApiSlice';
+
 // import logo from '/logo2.png';
 
 export default function Body() {
@@ -22,13 +24,13 @@ export default function Body() {
 
     const nextSlide = () => {
         setCurrentIndex((prevIndex) => 
-            prevIndex + 1 < datas.length - itemsToShow + 1 ? prevIndex + 1 : 0
+            prevIndex + 1 < projects.length - itemsToShow + 1 ? prevIndex + 1 : 0
         );
     };
 
     const prevSlide = () => {
         setCurrentIndex((prevIndex) => 
-            prevIndex - 1 >= 0 ? prevIndex - 1 : datas.length - itemsToShow
+            prevIndex - 1 >= 0 ? prevIndex - 1 : projects.length - itemsToShow
         );
     };
 
@@ -47,13 +49,13 @@ export default function Body() {
 
     const prev = () => {
         setCurrent((prevIndex) => 
-            prevIndex - 1 >= 0 ? prevIndex - 1 : data.length - itemToShow
+            prevIndex - 1 >= 0 ? prevIndex - 1 : projects.length - itemToShow
         );
     }
 
     const next = () => {
         setCurrent((prevIndex) => 
-            prevIndex - 1 >= 0 ? prevIndex - 1 : data.length - itemToShow
+            prevIndex - 1 >= 0 ? prevIndex - 1 : projects.length - itemToShow
         );
     }
 
@@ -73,17 +75,19 @@ export default function Body() {
 
     const prevS = () => {
         setCurrIndex((prevIndex) => 
-            prevIndex - 1 >= 0 ? prevIndex - 1 : dat.length - itemtoShow
+            prevIndex - 1 >= 0 ? prevIndex - 1 : users.length - itemtoShow
         );
     }
 
     const nextS = () => {
         setCurrIndex((prevIndex) => 
-            prevIndex - 1 >= 0 ? prevIndex - 1 : dat.length - itemtoShow
+            prevIndex - 1 >= 0 ? prevIndex - 1 : users.length - itemtoShow
         );
     }
 
     const { data: users = [], isLoading } = useGetAllUsersQuery();
+    const { data: projects = [], isLoading: isProjectsLoading } = useGetAllProjectsQuery();
+
 
 
     return (
@@ -149,50 +153,49 @@ export default function Body() {
                     <div className="relative">
                         <div className="flex gap-4 sm:gap-6 snap-x overflow-x-auto snap-mandatory scrollbar-hide pb-4 -mx-4 px-4">
                         {users.slice(current, current + itemToShow).map((user, i) => (
-  <div key={user._id || i} className="w-[280px] sm:w-[320px] lg:w-[340px] flex-shrink-0 snap-start">
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-      <img 
-        src="/profileimg.png"
-        className="w-full h-[160px] sm:h-[180px] object-cover"
-        alt={user.name}
-      />
-      <div className="p-4 sm:p-6">
-        <h5 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{user.name}</h5>
-        <p className="text-sm sm:text-base text-gray-600 mb-4">{user.title || 'Meslek bilgisi yok'}</p>
-        <button
-  onClick={() => navigate(`/profile/${user._id}`)}
-  className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-indigo-600 text-white text-sm sm:text-base rounded-lg hover:bg-indigo-700 transition-all duration-300 hover:shadow-lg"
->
-  Profili Görüntüle
-</button>
+                            <div key={user._id || i} className="w-[280px] sm:w-[320px] lg:w-[340px] flex-shrink-0 snap-start">
+                                <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                                <img 
+                                    src="/profileimg.png"
+                                    className="w-full h-[160px] sm:h-[180px] object-cover"
+                                    alt={user.name}
+                                />
+                                <div className="p-4 sm:p-6">
+                                    <h5 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{user.name}</h5>
+                                    <p className="text-sm sm:text-base text-gray-600 mb-4">{user.title || 'Meslek bilgisi yok'}</p>
+                                    <button
+                            onClick={() => navigate(`/profile/${user._id}`)}
+                            className="w-full px-4 py-2 sm:px-6 sm:py-3 bg-indigo-600 text-white text-sm sm:text-base rounded-lg hover:bg-indigo-700 transition-all duration-300 hover:shadow-lg"
+                            >
+                            Profili Görüntüle
+                            </button>
 
-      </div>
-    </div>
-  </div>
-))}
-
-                        </div>
-                        {/* Navigation Arrows - Hidden on mobile */}
-                        <div className="hidden sm:block absolute top-1/2 -translate-y-1/2 w-full pointer-events-none">
-                            <div className="container mx-2 px-4">
-                                <div className="flex justify-between pointer-events-auto">
-                                    <button 
-                                        onClick={prev} 
-                                        className="p-2 sm:p-3 rounded-full bg-white/80 backdrop-blur-sm shadow-xl hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    >
-                                        <FiChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
-                                    </button>
-                                    <button 
-                                        onClick={next} 
-                                        className="p-2 sm:p-3 rounded-full bg-white/80 backdrop-blur-sm shadow-xl hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                    >
-                                        <FiChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
-                                    </button>
+                                </div>
                                 </div>
                             </div>
+                            ))}
                         </div>
+                        {/* Navigation Arrows - Hidden on mobile */}
+                        
+
+
                     </div>
+                    
                 </div>
+                <div className="relative hidden sm:block">
+                        <button 
+                            onClick={prev} 
+                            className="absolute top-[%10] left-[10px] p-2 sm:p-3 rounded-full bg-white/80 backdrop-blur-sm shadow-xl hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 z-10"
+                        >
+                            <FiChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+                        </button>
+                        <button 
+                            onClick={next} 
+                            className="absolute top-1/2 right-[10px] -translate-y-1/2 p-2 sm:p-3 rounded-full bg-white/80 backdrop-blur-sm shadow-xl hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 z-10"
+                        >
+                            <FiChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+                        </button>
+                    </div>
             </section>
 
             {/* Projects Section */}
@@ -203,24 +206,25 @@ export default function Body() {
                     </h1>
                     <div className="relative">
                         <div className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 -mx-4 px-4">
-                            {datas.slice(currentIndex, currentIndex + itemsToShow).map((a, index) => (
+                            {projects.slice(currentIndex, currentIndex + itemsToShow).map((a, index) => (
                                 <div key={index} className="w-[280px] sm:w-[320px] lg:w-[340px] flex-shrink-0 snap-start">
                                     <div className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                                         <div className="relative">
                                             <img 
-                                                src={a.image} 
+                                                src={a.image || "/projectimg1.png"} 
                                                 alt="Project" 
                                                 className="w-full h-[160px] sm:h-[180px] object-cover" 
                                             />
                                             <span className="absolute top-3 left-3 px-3 py-1.5 bg-indigo-600 text-white text-xs sm:text-sm rounded-full font-medium">
-                                                {a.badge}
+                                                {a.category}
                                             </span>
                                         </div>
                                         <div className="p-4 sm:p-6">
-                                            <div className="flex justify-between items-start gap-3">
-                                                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{a.exp}</h2>
+                                            <div className="justify-between items-start gap-3">
+                                                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{a.title}</h2>
+                                                <p className="text-sm sm:text-base text-gray-600 mb-4">{a.description}</p>
                                                 <button 
-                                                    onClick={() => navigate('/project-details')} 
+                                                    onClick={() => navigate(`/project/${a._id}`)} 
                                                     className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-300 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                 >
                                                     <FiArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -257,65 +261,9 @@ export default function Body() {
     );
 }
 
-const data = [
-    {
-        id: 1,
-        name: `Berfin Yılmaz`,
-        img: `/profileimg.png`,
-        rewiew: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    },
-    {
-        id: 2,
-        name: `Ayşenur Koçak`,
-        img: `/profileimg.png`,
-        rewiew: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    },
-    {
-        id: 3,
-        name: `Elif Sakin`,
-        img: `/profileimg.png`,
-        rewiew: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    },
-    {
-        id: 4,
-        name: `Zerrin Şekerci`,
-        img: `/profileimg.png`,
-        rewiew: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    }
-]
 
-const datas = [
-    {
-        id: 1,
-        badge: `Yazılım`,
-        image: `/projectimg1.png`,
-        exp: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    },
-    {
-        id: 2,
-        badge: `Psikoloji`,
-        image: `/projectimg2.png`,
-        exp: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    },
-    {
-        id: 3,
-        badge: `Çevre`,
-        image: `/projectimg3.png`,
-        exp: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    },
-    {
-        id: 4,
-        badge: `Elektronik`,
-        image: `/projectimg4.png`,
-        exp: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    },
-    {
-        id: 5,
-        badge: `Tasarım`,
-        image: `/projectimg5.png`,
-        exp: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia, totam.`
-    }
-]
+
+
 
 const dat = [
     {

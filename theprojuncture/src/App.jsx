@@ -60,7 +60,7 @@ export default function App() {
             <Route path="/publish-project" element={<PublishProject />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/my-profile" element={<MyProfile />} />
-            <Route path="/task" element={<Task />} />
+            <Route path="/project/:projectId/tasks" element={<Task />} />
             <Route path="/task/:id" element={<TaskDetails />} />
             <Route path="/profile/:id" element={<UserProfile />} />
             <Route path="/project/:id" element={<ProjectDetail />} />

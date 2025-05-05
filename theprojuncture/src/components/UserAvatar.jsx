@@ -26,23 +26,18 @@ const UserAvatar = () => {
     const [logoutUser] = useLogoutMutation();
 
     const logoutHandler = async () => {
-        try{
-             // logoutUser() fonksiyonu ile API'den çıkış işlemini gerçekleştiriyoruz
-        await logoutUser().unwrap();  // unwrap kullanarak yanıtı alıyoruz
-
-        // Redux store'dan logout işlemi
-        dispatch(logout());
-
-        // localStorage'dan kullanıcı bilgilerini temizleme
-        localStorage.removeItem("userInfo");
-
-        // Yönlendirme işlemi
-        navigate("/");
+        try {
+          await logoutUser().unwrap(); // Backend token silme işlemi
+      
+          dispatch(logout()); // Redux + localStorage temizleme
+      
+          navigate("/"); // Anasayfaya yönlendir
         } catch (error) {
-            console.error("Logout Error:", error);
-            toast.error("Something went wrong");
+          console.error("Logout Error:", error);
+          toast.error("Çıkış yapılırken bir hata oluştu.");
         }
-    };
+      };
+      
 
 
   return (

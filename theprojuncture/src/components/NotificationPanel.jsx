@@ -9,67 +9,24 @@ import { Link } from 'react-router-dom'
 import ViewNotification from './ViewNotification'
 import { useGetNotificationsQuery, useMarkNotiAsReadMutation } from '../redux/slices/api/userApiSlice'
 
-const data =[
-        {
-            _id: "1",
-            team: [
-                "1",
-                "2",
-                "3",
-            ],
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum explicabo provident dignissimos corporis. Ipsum tenetur repudiandae facilis accusantium assumenda laborum vero quo, consequatur eaque fugiat maiores beatae rem omnis enim!",
-            task: null,
-            notiType: "alert",
-            isRead: [],
-            createdAt: "2024-02-09",
-            updatedAt: "2024-02-09",
-            __v:0,
-        },
-        {
-            _id: "2",
-            team: [
-                "1",
-                "2",
-                "3",
-            ],
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum explicabo provident dignissimos corporis. Ipsum tenetur repudiandae facilis accusantium assumenda laborum vero quo, consequatur eaque fugiat maiores beatae rem omnis enim!",
-            task: null,
-            notiType: "alert",
-            isRead: [],
-            createdAt: "2024-02-09",
-            updatedAt: "2024-02-09",
-            __v:0,
-        },
-        {
-            _id: "3",
-            team: [
-                "1",
-                "2",
-                "3",
-            ],
-            text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum explicabo provident dignissimos corporis. Ipsum tenetur repudiandae facilis accusantium assumenda laborum vero quo, consequatur eaque fugiat maiores beatae rem omnis enim!",
-            task: null,
-            notiType: "alert",
-            isRead: [],
-            createdAt: "2024-02-09",
-            updatedAt: "2024-02-09",
-            __v:0,
-        },
-]
+
 const ICONS = {
-    alert: (
-        <HiBellAlert className='h-5 w-5 text-gray-600 group-hover:text-indigo-600' />
-    ),
-    message: (
-        <BiSolidMessageRounded className='h-5 w-5 text-gray-600 group-hover:text-indigo-600' />
-    ),
+    alert: <HiBellAlert className='h-5 w-5 text-gray-600 group-hover:text-indigo-600' />,
+    message: <BiSolidMessageRounded className='h-5 w-5 text-gray-600 group-hover:text-indigo-600' />,
+    join_request: <HiBellAlert className='h-5 w-5 text-gray-600 group-hover:text-indigo-600' />,
+    info: <BiSolidMessageRounded className='h-5 w-5 text-red-500 group-hover:text-red-600' />, // reddedildi tarzı
 };
+  
+  
 
 const NotificationPanel = () => {
     const [open, setOpen] =useState(false);
     const[selected, setSelected] = useState(null);
 
-    const{ data, refetch } = useGetNotificationsQuery();
+    const { data, refetch } = useGetNotificationsQuery(undefined, {
+        pollingInterval: 5000, // her 5 saniyede bir yenile
+    });
+      
     const[ markAsRead ] = useMarkNotiAsReadMutation();
 
     const readHandler = async(type, id) => {

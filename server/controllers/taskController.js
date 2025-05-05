@@ -1,13 +1,14 @@
 import Task from "../models/task.js";
 import Notice from "../models/notification.js";
+import mongoose from "mongoose";
 
 export const createTask = async (req, res) => {
     try{
         const { userId } = req.user;
 
-        const {title, team, stage, date, priority, assets} = req.body;
+        const {title, team, stage, date, priority, assets, projectId} = req.body;
 
-        let text = "New task has been assigned to you"
+        let text = "Size yeni bir task atandı."
         if(team?.length > 1) {
             text = text + ` and ${team.length - 1} others.`;
         }
@@ -32,6 +33,7 @@ export const createTask = async (req, res) => {
             priority: priority.toLowerCase(),
             assets,
             activities: [activity],
+            projectId,
         });
 
         await Notice.create({
@@ -71,7 +73,7 @@ export const duplicateTask = async (req, res) => {
 
         await newTask.save();
 
-        let text = "New task has been assigned to you";
+        let text = "Size yeni bir task atandı.";
         if (task.team.length > 1) {
         text = text + ` and ${task.team.length - 1} others.`;
         }
@@ -199,13 +201,25 @@ export const dashboardStatistics = async (req, res) => {
 
 export const getTasks = async (req, res) => {
     try {
-        const { stage, isTrashed } = req.query;
+        const { stage, isTrashed, projectId } = req.query;
 
-        let query = {isTrashed: isTrashed ? true : false };
+        let query = {};
 
-        if(stage){
+        if (isTrashed === "true") {
+        query.isTrashed = true;
+        } else {
+        query.isTrashed = false;
+        }
+
+
+        if (stage && stage !== "all") {
             query.stage = stage;
         }
+        
+
+        if (projectId) {
+            query.projectId = new mongoose.Types.ObjectId(projectId);
+        }       
 
         let queryResult = Task.find(query)
             .populate({
@@ -220,6 +234,10 @@ export const getTasks = async (req, res) => {
                 status: true,
                 tasks,
             });
+
+            console.log("Sorgulanan projectId:", projectId);
+            console.log("Sorgu:", query);
+
 
     } catch (error) {
         console.log(error);
@@ -253,13 +271,14 @@ export const getTask = async (req, res) => {
 
 export const createSubTask = async (req, res) => {
     try {
-        const { title, tag, date } = req.body;
+        const { title, tag, date, projectId } = req.body;
         const {id} = req.params;
 
         const newSubTask ={
             title,
             date,
             tag,
+            projectId,
         };
 
         const task= await Task.findById(id);
@@ -267,6 +286,9 @@ export const createSubTask = async (req, res) => {
         task.subTasks.push(newSubTask);
 
         await task.save();
+
+        console.log("Subtask POST body:", req.body);
+
 
          res
          .status(200)

@@ -1,25 +1,25 @@
 import express from "express";
-import { isAdminRoute, protectRoute } from "../middlewares/authMiddlewave.js";
+import { isAdminRoute, protectRoute, isProjectMemberOrOwner } from "../middlewares/authMiddlewave.js";
 import { createSubTask, createTask, dashboardStatistics, deleteRestoreTask, duplicateTask, getTask, getTasks, postTaskActivity, trashTask, updateTask } from "../controllers/taskController.js";
 
 const router = express.Router();
 
-router.post("/create", protectRoute, isAdminRoute, createTask);
-router.post("/duplicate/:id", protectRoute, isAdminRoute, duplicateTask);
+router.post("/create", protectRoute, isProjectMemberOrOwner, createTask);
+router.post("/duplicate/:id", protectRoute, isProjectMemberOrOwner, duplicateTask);
 router.post("/activity/:id", protectRoute, postTaskActivity);
 
 router.get("/dashboard", protectRoute, dashboardStatistics); 
 router.get("/", protectRoute, getTasks);
 router.get("/:id", protectRoute, getTask);
 
-router.put("/create-subtask/:id", protectRoute, isAdminRoute, createSubTask);
-router.put("/update/:id", protectRoute, isAdminRoute, updateTask);
-router.put("/:id", protectRoute, isAdminRoute, trashTask);
+router.put("/create-subtask/:id", protectRoute, isProjectMemberOrOwner, createSubTask);
+router.put("/update/:id", protectRoute, isProjectMemberOrOwner, updateTask);
+router.put("/:id", protectRoute, isProjectMemberOrOwner, trashTask);
 
 router.delete(
     "/delete-restore/:id?",
     protectRoute,
-    isAdminRoute,
+    isProjectMemberOrOwner,
     deleteRestoreTask
 );
 

@@ -39,10 +39,12 @@ const taskSchema = new Schema({
             tag: String,
         },
     ],
+    projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
     assets: [String],
     team: [{type: Schema.Types.ObjectId, ref: "User"}],
     isTrashed: {type: Boolean, default: false },
 },
+
 { timestamps: true }
 );
 

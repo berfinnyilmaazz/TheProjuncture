@@ -7,13 +7,14 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
 import { Menu, Transition } from "@headlessui/react";
 import AddTask from "./AddTask";
-import AddSubTask from "./AddSubTask";
+// import AddSubTask from "./AddSubTask";
 import ConfirmatioDialog from '../Dialogs';
 import { useDuplicateTaskMutation, useTrashTaskMutation } from '../../redux/slices/api/taskApiSlice';
 import { toast } from 'sonner';
 
 
-const TaskDialog = ({task}) => {
+const TaskDialog = ({task, projectId}) => {
+  console.log("projectId:", projectId); // 💥 Buraya ekle
 
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -72,16 +73,16 @@ const TaskDialog = ({task}) => {
       icon: <MdOutlineEdit className='mr-2 h-5 w-5' aria-hidden='true' />,
       onClick: () => setOpenEdit(true),
     },
-    {
-      label: "Add Sub-Task",
-      icon: <MdAdd className='mr-2 h-5 w-5' aria-hidden='true' />,
-      onClick: () => setOpen(true),
-    },
-    {
-      label: "Duplicate",
-      icon: <HiDuplicate className='mr-2 h-5 w-5' aria-hidden='true' />,
-      onClick: () => duplicateHandler(),
-    },
+    // {
+    //   label: "Add Sub-Task",
+    //   icon: <MdAdd className='mr-2 h-5 w-5' aria-hidden='true' />,
+    //   onClick: () => setOpen(true),
+    // },
+    // {
+    //   label: "Duplicate",
+    //   icon: <HiDuplicate className='mr-2 h-5 w-5' aria-hidden='true' />,
+    //   onClick: () => duplicateHandler(),
+    // },
   ];
 
   return (
@@ -142,15 +143,18 @@ const TaskDialog = ({task}) => {
           </Transition>
         </Menu>
       </div>
+      {task && projectId && (
+  <AddTask
+    open={openEdit}
+    setOpen={setOpenEdit}
+    projectId={projectId}
+    key={task._id || "edit-task"}
+  />
+)}
 
-      <AddTask
-        open={openEdit}
-        setOpen={setOpenEdit}
-        task={task}
-        key={new Date().getTime()}
-      />
 
-      <AddSubTask open={open} setOpen={setOpen} />
+
+      {/* <AddSubTask open={open} setOpen={setOpen} /> */}
 
       <ConfirmatioDialog
         open={openDialog}

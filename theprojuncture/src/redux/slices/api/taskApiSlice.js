@@ -13,8 +13,8 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         }),
 
         getAllTask: builder.query({
-            query: ({ strQuery, isTrashed, search }) => ({
-                url: `${TASKS_URL}?stage=${strQuery}&isTrashed=${isTrashed}&search=${search}`,
+            query: ({ stage="all", isTrashed, search, projectId }) => ({
+                url: `${TASKS_URL}?stage=${stage}&isTrashed=${isTrashed}&search=${search}&projectId=${projectId || ""}`,
                 method: "GET",
                 credentials: "include",
             }),
@@ -26,6 +26,9 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: data,
                 credentials: "include",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
             }),
         }),
 

@@ -7,7 +7,7 @@ import { BiMessageAltDetail } from 'react-icons/bi'
 import { FaList } from 'react-icons/fa'
 import UserInfo from './UserInfo'
 import { IoMdAdd } from 'react-icons/io'
-import AddSubTask from './task/AddSubTask'
+// import AddSubTask from './task/AddSubTask'
 import TaskDialog from './task/TaskDialog'
 
 
@@ -17,10 +17,22 @@ const ICONS = {
     low: <MdKeyboardArrowDown />,
 }
 
-const TaskCard = ({task}) => {
+const TaskCard = ({task, projectId, projectOwnerId, projectMembers}) => {
  
     const {user} = useSelector(state => state.auth);
     const [open, setOpen] = useState(false);
+
+    const isAuthorized =
+    user?._id === projectOwnerId?.toString() ||
+    projectMembers?.some(member => member._id?.toString() === user?._id);
+  
+    console.log("User ID:", user?._id)
+    console.log("Project Owner ID:", projectOwnerId)
+    console.log("Project Members:", projectMembers)
+    console.log("isAuthorized:", isAuthorized)
+    console.log("TaskDialog render", task, projectId);
+
+
 
   return (
     <>
@@ -33,8 +45,9 @@ const TaskCard = ({task}) => {
                     <span className='text-lg'>{ICONS[task?.priority]}</span>
                     <span className='uppercase'>{task?.priority} Priority</span>
             </div>
+            <TaskDialog task={task} isVisible={isAuthorized} projectId={task.projectId}/>
 
-                {user?.isAdmin && <TaskDialog task={task} />}
+
         </div>
 
         <>
@@ -56,14 +69,14 @@ const TaskCard = ({task}) => {
                     <BiMessageAltDetail />
                     <span>{task?.activities?.length}</span>
                 </div>
-                <div className='flex gap-1 items-center text-sm text-gray-600'>
+                {/* <div className='flex gap-1 items-center text-sm text-gray-600'>
                     <MdAttachFile />
                     <span>{task?.assets?.length}</span>
-                </div>
-                <div className='flex gap-1 items-center text-sm text-gray-600'>
+                </div> */}
+                {/* <div className='flex gap-1 items-center text-sm text-gray-600'>
                     <FaList />
                     <span>{task?.subTasks?.length}</span>
-                </div>
+                </div> */}
             </div>
 
             <div className='flex flex-row-reverse'>
@@ -81,7 +94,7 @@ const TaskCard = ({task}) => {
         </div>
 
         {/* sub tasks */}
-        {task?.subTasks?.length > 0 ? (
+        {/* {task?.subTasks?.length > 0 ? (
             <div className='py-4 border-t border-gray-200'>
                 <h5 className='text-base line-clamp-1 text-black'>
                     {task?.subTasks[0].title}
@@ -113,10 +126,10 @@ const TaskCard = ({task}) => {
                 <IoMdAdd className='text-lg' />
                 <span>ADD SUBTASK</span>
             </button>
-        </div>
+        </div> */}
      </div>
 
-     <AddSubTask open={open} setOpen={setOpen} id={task._id} />       
+     {/* <AddSubTask open={open} setOpen={setOpen} id={task._id} projectId={task.projectId} />        */}
     </>
   )
 }

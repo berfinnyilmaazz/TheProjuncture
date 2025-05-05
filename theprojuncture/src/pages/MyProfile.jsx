@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FiGrid, FiBookmark, FiHeart } from 'react-icons/fi';
-import { useGetMyProjectsQuery } from "../redux/slices/api/projectApiSlice";
+import { useGetAllProjectsQuery, useGetMyProjectsQuery } from "../redux/slices/api/projectApiSlice";
 
 export default function MyProfile() {
   const navigate = useNavigate();
@@ -10,6 +10,31 @@ export default function MyProfile() {
   const [activeTab, setActiveTab] = useState('published');
 
   const { data: myProjects = [] } = useGetMyProjectsQuery();
+
+  const { data: allProjects = [] } = useGetAllProjectsQuery();
+
+  const joinedProjects = user?._id
+  ? myProjects.filter((proj) =>
+      proj.members?.some((m) =>
+        typeof m === "object"
+          ? m._id?.toString() === user._id
+          : m === user._id
+      ) &&
+      (typeof proj.owner === "object"
+        ? proj.owner._id !== user._id
+        : proj.owner !== user._id)
+    )
+  : [];
+
+  const myPublishedProjects = user?._id
+  ? myProjects.filter((proj) =>
+      typeof proj.owner === "object"
+        ? proj.owner._id === user._id
+        : proj.owner === user._id
+    )
+  : [];
+  
+
 
   const userProfile = {
     name: user?.name || "İsimsiz",
@@ -19,15 +44,7 @@ export default function MyProfile() {
     avatar: "/profileimg.png",
   };
 
-  const joinedProjects = [
-    {
-      id: 1,
-      title: 'E-Commerce Platform',
-      image: '/projectimg2.png',
-      badge: 'Web',
-      likes: 32,
-    },
-  ];
+  
 
   return (
     <main className="min-h-screen bg-gray-50 py-8">
@@ -91,7 +108,7 @@ export default function MyProfile() {
       )}
     </div>
   )}
-</div>
+        </div>
 
 
         {/* Tabs */}
@@ -122,7 +139,7 @@ export default function MyProfile() {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(activeTab === 'published' ? myProjects : joinedProjects).map((project) => (
+          {(activeTab === 'published' ? myPublishedProjects : joinedProjects).map((project) => (
               <div
                 key={project._id || project.id}
                 className="group cursor-pointer"
