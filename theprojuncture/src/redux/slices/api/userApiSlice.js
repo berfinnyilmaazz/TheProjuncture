@@ -46,6 +46,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
+        getAllNotifications: builder.query({
+            query: () => ({
+                url: `${USER_URL}/notifications/all`,
+                method: "GET",
+                credentials: "include",
+            }),
+        }),        
+
         markNotiAsRead: builder.mutation({
             query: (data) => ({
                 url: `${USER_URL}/read-noti?isReadType=${data.type}&id=${data?.id}`,
@@ -71,8 +79,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
         getUserById: builder.query({
             query: (id) => `/user/${id}`,
             credentials: 'include',
-        }),         
+        }),          
     }),
 });
 
-export const { useUpdateUserMutation, useGetTeamListQuery, useDeleteUserMutation, useUserActionMutation, useGetNotificationsQuery, useMarkNotiAsReadMutation, useChangePasswordMutation, useGetAllUsersQuery, useGetUserByIdQuery} = userApiSlice;
+export const { useUpdateUserMutation, useGetTeamListQuery, useDeleteUserMutation, useUserActionMutation, useGetNotificationsQuery, useGetAllNotificationsQuery, useMarkNotiAsReadMutation, useChangePasswordMutation, useGetAllUsersQuery, useGetUserByIdQuery} = userApiSlice;

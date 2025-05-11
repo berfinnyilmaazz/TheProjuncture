@@ -38,7 +38,7 @@ export const TASK_TYPE = {
 
     //const {status, projectId} = params?.status || "";
 
-    const { data: taskData = [], isLoading } = useGetAllTaskQuery({
+    const { data: taskData = [], isLoading, refetch } = useGetAllTaskQuery({
       stage: "all",
       isTrashed: false,
       search: "",
@@ -51,11 +51,6 @@ const user = useSelector((state) => state.auth.user);
 const { data: project, isLoading: isProjectLoading } = useGetProjectByIdQuery(projectId, {
   skip: !projectId,
 });
-
-console.log("projectId:", projectId);
-console.log("typeof projectId:", typeof projectId); // "string" olması normal, ama backend'de ObjectId yapılmalı
-
-
 
 if (isProjectLoading) return <p>Yükleniyor...</p>;
 
@@ -76,9 +71,7 @@ if (project?.owner?._id !== user?._id && !project?.members?.some(m => m._id === 
 if (!projectId) {
   return <div>Hatalı yönlendirme: Proje bilgisi yok.</div>;
 }
-
-console.log(taskData)
-    
+  
 
       return isLoading ? (
         <div className='py-10'>
@@ -111,10 +104,15 @@ console.log(taskData)
 
               
               {taskData?.tasks?.length > 0 ? (
-                <BoardView task={taskData?.tasks} />
-              ) : (
-                <p className="text-gray-500 text-center py-10">Henüz görev yok.</p>
-              )}
+  <BoardView
+    task={taskData?.tasks.filter((t) => !t.isTrashed)} // << sadece silinmemişleri gönderiyoruz
+    projectId={projectId}
+    onTaskDeleted={refetch}
+  />
+) : (
+  <p className="text-gray-500 text-center py-10">Henüz görev yok.</p>
+)}
+
 
 
               

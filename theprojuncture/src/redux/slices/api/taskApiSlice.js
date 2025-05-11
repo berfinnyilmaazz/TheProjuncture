@@ -17,7 +17,8 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 url: `${TASKS_URL}?stage=${stage}&isTrashed=${isTrashed}&search=${search}&projectId=${projectId || ""}`,
                 method: "GET",
                 credentials: "include",
-            }),
+                providesTags: ['Task'],
+            }),           
         }),
 
         createTask: builder.mutation({
@@ -51,12 +52,27 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         }),
 
         trashTask: builder.mutation({
-            query: ({id}) => ({
+            query: ({id, projectId}) => ({
                 url: `${TASKS_URL}/${id}`,
                 method: "PUT",
+                body: { projectId },
                 credentials: "include",
             }), 
         }),
+
+        deleteRestoreTask: builder.mutation({
+            query: ({ taskId, projectId }) => ({
+                url: `${TASKS_URL}/delete-restore/${taskId}`,
+                method: "DELETE",
+                body: { projectId },
+                credentials: "include",
+                headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            }),
+            invalidatesTags: ['Task'],
+        }),
+
 
         createSubTask: builder.mutation({
             query: ({data,id}) => ({
@@ -86,4 +102,4 @@ export const taskApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const {useGetDashboardStatsQuery, useGetAllTaskQuery, useCreateTaskMutation, useDuplicateTaskMutation, useUpdateTaskMutation, useTrashTaskMutation, useCreateSubTaskMutation, useGetSingleTaskQuery,usePostTaskActivityMutation} = taskApiSlice;
+export const {useGetDashboardStatsQuery, useGetAllTaskQuery, useCreateTaskMutation, useDuplicateTaskMutation, useUpdateTaskMutation, useTrashTaskMutation, useCreateSubTaskMutation, useGetSingleTaskQuery, usePostTaskActivityMutation, useDeleteRestoreTaskMutation} = taskApiSlice;

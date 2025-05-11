@@ -17,7 +17,7 @@ router.put("/update/:id", protectRoute, isProjectMemberOrOwner, updateTask);
 router.put("/:id", protectRoute, isProjectMemberOrOwner, trashTask);
 
 router.delete(
-    "/delete-restore/:id?",
+    "/delete-restore/:id?", 
     protectRoute,
     isProjectMemberOrOwner,
     deleteRestoreTask

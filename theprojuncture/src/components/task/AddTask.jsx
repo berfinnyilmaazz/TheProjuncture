@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ModalWrapper from '../ModalWrapper'
 import { Dialog } from '@headlessui/react'
 import Textbox from "../Textbox";
@@ -44,6 +44,7 @@ const AddTask = ({open, setOpen, task, project}) => {
     const {
         register, 
         handleSubmit, 
+        reset,
         formState: {errors},
     } = useForm({defaultValues});
 
@@ -58,6 +59,18 @@ const AddTask = ({open, setOpen, task, project}) => {
     const [createTask, { isLoading }] = useCreateTaskMutation();
     const [updateTask, { isLoading: isUpdating }] = useUpdateTaskMutation();
     const URLS = task?.assets ? [...task.assets] : [];
+
+    useEffect(() => {
+  if (task) {
+    reset({
+      title: task.title || "",
+      date: dateFormatter(task.date || new Date()),
+    });
+    setTeam(task.team || []);
+    setStage(task.stage?.toUpperCase() || LISTS[0]);
+    setPriority(task.priority?.toUpperCase() || PRIORITY[2]);
+  }
+}, [task, reset]);
 
 
     const submitHandler = async(data) => {
@@ -77,7 +90,7 @@ const AddTask = ({open, setOpen, task, project}) => {
       try {
         const newData = {
           ...data,
-          projectId: project?._id, // <--- Bunu ekle!
+          projectId: project?._id,
           assets: [ ...URLS, ...uploadedFileURLs],
           team,
           stage,
@@ -98,6 +111,9 @@ const AddTask = ({open, setOpen, task, project}) => {
         toast.error(err?.data?.message || err.error);
       }
     };
+
+    console.log(project?._id)
+
 
     const handleSelect = () => {
         setAssets(e.target.files);
@@ -132,7 +148,6 @@ const AddTask = ({open, setOpen, task, project}) => {
       });
     };
 
-    console.log(project?._id)
 
   return (
     <>

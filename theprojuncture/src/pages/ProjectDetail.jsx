@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetProjectByIdQuery } from "../redux/slices/api/projectApiSlice";
 import { useSelector } from "react-redux";
@@ -10,15 +10,19 @@ const ProjectDetail = () => {
   const { data: project, isLoading, error } = useGetProjectByIdQuery(id);
   const { user } = useSelector((state) => state.auth); // userInfo yerine user
   const [joinProject, { isLoading: isJoining }] = useJoinProjectMutation();
+  const [hasRequestedJoin, setHasRequestedJoin] = useState(false);
+  
 
   const handleJoin = async () => {
     try {
       await joinProject(project._id).unwrap();
       toast.success("Katılma isteği gönderildi!");
+      setHasRequestedJoin(true); // Butonu değiştirecek
     } catch (err) {
       toast.error(err?.data?.message || "Katılma isteği başarısız");
     }
   };
+  
   
 
 
@@ -82,8 +86,8 @@ const ProjectDetail = () => {
           <div className="pt-8">
             {project.owner?._id === user._id || project.owner === user._id ? (
               <p className="text-center text-indigo-600 font-semibold">Projeyi siz yayınladınız</p>
-            ) : project.pendingJoinRequests?.includes(user._id) ? (
-              <p className="text-center text-indigo-600 font-semibold">Zaten katılma isteği gönderdiniz</p>
+            ) : hasRequestedJoin || project.pendingJoinRequests?.includes(user._id) ? (
+              <p className="text-center text-indigo-600 font-semibold">Katılma isteği gönderdiniz</p>
             ) : project.members?.some(member => member._id === user._id) ? (
               <p className="text-center text-indigo-600 font-semibold">Zaten bu projeye katıldınız</p>
             ) : (

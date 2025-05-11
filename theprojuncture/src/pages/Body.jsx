@@ -14,7 +14,7 @@ export default function Body() {
         dots: true,
         infinite: true, 
         speed: 500,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1 
       };
 
@@ -94,55 +94,36 @@ export default function Body() {
         <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
             {/* Hero Section */}
             <section className="relative w-full bg-white overflow-hidden py-8">
-                {dat.slice(currIndex, currIndex + itemtoShow).map((b, ind) => (
-                    <div className="container mx-auto px-4 sm:px-6 lg:px-8" key={ind}>
-                        <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
-                            {/* Image Container */}
-                            <div className="w-full lg:w-1/2 transform transition-all duration-500 hover:scale-105">
-                                <img 
-                                    src={b.img} 
-                                    alt="" 
-                                    className="w-full h-[200px] sm:h-[300px] lg:h-[400px] object-cover rounded-2xl shadow-2xl"
-                                />
-                            </div>
-                            {/* Content Container */}
-                            <div className="w-full lg:w-1/2 space-y-4 sm:space-y-6 text-center lg:text-left">
-                                <span className="inline-block px-4 py-2 bg-indigo-100 text-indigo-600 font-medium text-sm rounded-full">
-                                    {b.text}
-                                </span>
-                                <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
-                                    {b.explanation}
-                                </h2>
-                                <a 
-                                    href="#" 
-                                    className="inline-block px-6 py-3 sm:px-8 sm:py-4 bg-indigo-600 text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
-                                >
-                                    Hemen Başla
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-                {/* Navigation Arrows - Hidden on mobile */}
-                <div className="hidden sm:block absolute top-1/2 -translate-y-1/2 w-full pointer-events-none">
-                    <div className="container mx-auto px-4">
-                        <div className="flex justify-between pointer-events-auto">
-                            <button 
-                                onClick={prevS} 
-                                className="p-2 sm:p-3 rounded-full bg-white/80 backdrop-blur-sm shadow-xl hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            >
-                                <FiChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
-                            </button>
-                            <button 
-                                onClick={nextS} 
-                                className="p-2 sm:p-3 rounded-full bg-white/80 backdrop-blur-sm shadow-xl hover:bg-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            >
-                                <FiChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
+  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+      {/* Logo */}
+      <div className="w-full lg:w-1/2 flex justify-center transform transition-all duration-500 hover:scale-105">
+        <img 
+          src="/logo2.png" 
+          alt="Projuncture Logo" 
+          className="w-full max-w-[400px] h-auto object-contain rounded-2xl shadow-2xl"
+        />
+      </div>
+
+      {/* İçerik */}
+      <div className="w-full lg:w-1/2 space-y-4 sm:space-y-6 text-center lg:text-left">
+        <span className="inline-block px-4 py-2 bg-indigo-100 text-indigo-600 font-medium text-sm rounded-full">
+          Kendi Projeni Yayınla
+        </span>
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
+          Yeteneğini Projeye Dönüştür!
+        </h2>
+        <a 
+          href="/publish-project" 
+          className="inline-block px-6 py-3 sm:px-8 sm:py-4 bg-indigo-600 text-white text-sm sm:text-base font-semibold rounded-xl hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+        >
+          Hemen Başla
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 
             {/* Profiles Section */}
             <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">

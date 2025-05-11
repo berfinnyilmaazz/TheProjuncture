@@ -327,28 +327,21 @@ export const updateTask = async (req, res) => {
 };
 
 export const trashTask = async (req, res) => {
-    try {
-        const {id} = req.params;
-
-        const task= await Task.findById(id);
-
-        task.isTrashed = true;
-
-        await task.save();
-
-        res.status(200).json({ 
-            status: true, 
-            message: `Task trashed successfully.`,
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(400).json({ status: false, message: error.message});
-    }
+  try {
+    const { id } = req.params;
+    const task = await Task.findById(id);
+    task.isTrashed = true;
+    await task.save();
+    res.status(200).json({ success: true, message: "Task trashed" });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
+
 
 export const deleteRestoreTask = async (req, res) => {
     try {
-        const {id} = req.params;
+        const {id} = req.params; 
         const {actionType} = req.query;
 
         if(actionType === "delete"){

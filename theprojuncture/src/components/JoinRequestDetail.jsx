@@ -1,12 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useApproveJoinRequestMutation, useRejectJoinRequestMutation } from "../redux/slices/api/projectApiSlice";
+import {
+  useApproveJoinRequestMutation,
+  useGetProjectByIdQuery,
+  useRejectJoinRequestMutation,
+} from "../redux/slices/api/projectApiSlice";
 import { toast } from "react-toastify";
+import { FaRegUserCircle } from "react-icons/fa";
+import { useGetUserByIdQuery } from "../redux/slices/api/userApiSlice";
 
 const JoinRequestDetail = ({ userId, projectId }) => {
   const navigate = useNavigate();
   const [approveJoinRequest, { isLoading: isApproving }] = useApproveJoinRequestMutation();
   const [rejectJoinRequest, { isLoading: isRejecting }] = useRejectJoinRequestMutation();
+  const { data: userData } = useGetUserByIdQuery(userId);
+  const { data: projectData } = useGetProjectByIdQuery(projectId);
+
 
   const handleApprove = async () => {
     try {
@@ -27,15 +36,24 @@ const JoinRequestDetail = ({ userId, projectId }) => {
   };
 
   return (
-    <div className="p-4 space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800">
-        Bu kullanıcı projene katılmak istiyor:
-      </h3>
+    <div className="p-6 bg-white rounded-xl shadow-xl w-full max-w-md mx-auto space-y-6">
+      <div className="flex items-center gap-3">
+        <FaRegUserCircle className="text-4xl text-indigo-500" />
+        <div>
+          <h3 className="text-xl font-semibold text-gray-800">
+            Katılım Talebi
+          </h3>
+          <p className="text-gray-500">
+            {userData?.name || "Bir kullanıcı"}, {projectData?.title || "bir"} projenize katılmak istiyor.
+          </p>
 
-      <div className="flex gap-3">
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row justify-between gap-3 mt-4">
         <button
           onClick={() => navigate(`/profile/${userId}`)}
-          className="text-indigo-600 underline font-medium"
+          className="flex-1 border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-lg transition"
         >
           Profili Gör
         </button>
@@ -43,7 +61,7 @@ const JoinRequestDetail = ({ userId, projectId }) => {
         <button
           onClick={handleApprove}
           disabled={isApproving}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition disabled:opacity-50"
         >
           {isApproving ? "Onaylanıyor..." : "Onayla"}
         </button>
@@ -51,7 +69,7 @@ const JoinRequestDetail = ({ userId, projectId }) => {
         <button
           onClick={handleReject}
           disabled={isRejecting}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition disabled:opacity-50"
         >
           {isRejecting ? "Reddediliyor..." : "Reddet"}
         </button>

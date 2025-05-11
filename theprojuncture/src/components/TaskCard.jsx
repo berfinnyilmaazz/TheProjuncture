@@ -17,7 +17,7 @@ const ICONS = {
     low: <MdKeyboardArrowDown />,
 }
 
-const TaskCard = ({task, projectId, projectOwnerId, projectMembers}) => {
+const TaskCard = ({task, projectId, projectOwnerId, projectMembers, refetch}) => {
  
     const {user} = useSelector(state => state.auth);
     const [open, setOpen] = useState(false);
@@ -32,6 +32,11 @@ const TaskCard = ({task, projectId, projectOwnerId, projectMembers}) => {
     console.log("isAuthorized:", isAuthorized)
     console.log("TaskDialog render", task, projectId);
 
+const onDeleted = () => {
+  if (typeof refetch === "function") {
+    refetch(); // BoardView üzerinden gelen prop varsa onu çalıştır
+  }
+};
 
 
   return (
@@ -45,7 +50,13 @@ const TaskCard = ({task, projectId, projectOwnerId, projectMembers}) => {
                     <span className='text-lg'>{ICONS[task?.priority]}</span>
                     <span className='uppercase'>{task?.priority} Priority</span>
             </div>
-            <TaskDialog task={task} isVisible={isAuthorized} projectId={task.projectId}/>
+            <TaskDialog
+  
+  task={task}
+  projectId={projectId}
+  onDeleted={refetch}
+/>
+
 
 
         </div>
@@ -66,7 +77,7 @@ const TaskCard = ({task, projectId, projectOwnerId, projectMembers}) => {
         <div className='flex items-center justify-between mb-2'>
             <div className='flex items-center gap-3'>
                 <div className='flex gap-1 items-center text-sm text-gray-600'>
-                    <BiMessageAltDetail />
+                    <BiMessageAltDetail /> 
                     <span>{task?.activities?.length}</span>
                 </div>
                 {/* <div className='flex gap-1 items-center text-sm text-gray-600'>

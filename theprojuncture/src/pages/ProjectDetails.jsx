@@ -19,7 +19,7 @@ export default function ProjectDetails() {
 
   
   console.log("userInfo", userInfo);
-console.log("myProjects", myProjects);
+  console.log("myProjects", myProjects);
 
 
   const myPublishedProjects = userInfo?._id
@@ -45,11 +45,6 @@ console.log("myProjects", myProjects);
 
 
   console.log("Joined Projects:", joinedProjects);
-
-
-
-
-
 
     useEffect(() => {
       if (myPublishedProjects.length > 0 && !selectedProjectId) {
@@ -98,8 +93,15 @@ console.log("myProjects", myProjects);
       
       {/* Sidebar */}
       <div className="w-1/4 bg-white p-4 rounded-lg shadow overflow-y-auto">
-        <h3 className="text-xl font-semibold mb-4 text-blue-600">Projeler</h3>
-
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold text-blue-600">Projeler</h3>
+          <button
+            onClick={() => navigate('/publish-project')}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+          >
+            Proje Yayınla
+          </button>
+        </div>
         {/* Yayınladığım */}
         <div className="mb-4">
           <h4 className="font-semibold text-gray-700 mb-2">📢 Yayınladığım Projeler</h4>
@@ -110,12 +112,13 @@ console.log("myProjects", myProjects);
             {myPublishedProjects.map((project, index) => (
               <li
                 key={project._id}
-                className={`p-3 mb-2 rounded list-none cursor-pointer hover:bg-blue-100 ${
-                  currentProject.name === project.name ? "bg-blue-200" : ""
+                className={`p-3 mb-2 rounded list-none cursor-pointer ${
+                  selectedProjectId === project._id ? "bg-blue-700 text-white" : "bg-blue-100 hover:bg-blue-300"
                 }`}
+                
                 onClick={() => loadProject(project)}
               >
-                <h4 className="text-md font-bold">{project.title}</h4>
+                <h4 className="text-md font-semibold">{project.title}</h4>
                 {/* <p className="text-sm text-gray-600">{project.owner}</p>
                 <span className="text-xs text-gray-500">{project.budget}</span> */}
               </li>
@@ -131,12 +134,12 @@ console.log("myProjects", myProjects);
             {joinedProjects.map((project, index) => (
               <li
                 key={project._id}
-                className={`p-3 mb-2 rounded cursor-pointer hover:bg-blue-100 ${
-                  currentProject.name === project.name ? "bg-blue-200" : ""
-                }`}
+                className={`p-3 mb-2 rounded list-none cursor-pointer ${
+                  selectedProjectId === project._id ? "bg-blue-700 text-white" : "bg-blue-100 hover:bg-blue-300"
+                }`}                
                 onClick={() => loadProject(project)}
               >
-                <h4 className="text-md font-bold">{project.title}</h4>
+                <h4 className="text-md font-semibold">{project.title}</h4>
                 <p className="text-sm text-gray-600">{project.company}</p>
                 <span className="text-xs text-gray-500">{project.budget}</span>
               </li>
@@ -147,17 +150,18 @@ console.log("myProjects", myProjects);
 
       {/* Main Content */}
       <div className="w-2/4 px-6">
+        
+        <h2 className="text-2xl font-bold mb-5">{currentProject.title}</h2>
         <img
-          src={currentProject.image || '/placeholder.jpg'}
+          src={currentProject.image || './projectimg1.jpg'}
           alt={currentProject.title}
-          className="w-full h-40 object-cover rounded-t"
+          className="w-full max-h-64 object-contain rounded-t mb-5"
         />
-        <h2 className="text-2xl font-bold mb-1">{currentProject.title}</h2>
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
           <p><strong>Başlangıç:</strong> {currentProject.startDate}</p>
           <p><strong>Bitiş:</strong> {currentProject.endDate}</p>
         </div>
-        <p className="mt-4 text-gray-800">{currentProject.description}</p>
+        <p className="mt-5 text-gray-800">{currentProject.description}</p>
 
 
         <div className="mt-6">
@@ -165,7 +169,7 @@ console.log("myProjects", myProjects);
             onClick={() => navigate(`/project/${currentProject._id}/tasks`)}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
           >
-            Kanban Board'a Git
+            Task Sayfasına Git
           </button>
         </div>
       </div>

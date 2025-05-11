@@ -19,10 +19,18 @@ const UserProfile = () => {
   (project) => project.owner?._id === user?._id
 );
 
-const joinedProjects = allProjects.filter(
-  (project) =>
-    project.members?.some((member) => member._id === user?._id)
-);
+const joinedProjects = user?._id
+  ? allProjects.filter((proj) =>
+      proj.members?.some((m) =>
+        typeof m === "object"
+          ? m._id?.toString() === user._id
+          : m === user._id
+      ) &&
+      (typeof proj.owner === "object"
+        ? proj.owner._id !== user._id
+        : proj.owner !== user._id)
+    )
+  : [];
 
 
 

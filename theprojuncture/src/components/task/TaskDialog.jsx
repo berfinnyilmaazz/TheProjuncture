@@ -9,11 +9,11 @@ import { Menu, Transition } from "@headlessui/react";
 import AddTask from "./AddTask";
 // import AddSubTask from "./AddSubTask";
 import ConfirmatioDialog from '../Dialogs';
-import { useDuplicateTaskMutation, useTrashTaskMutation } from '../../redux/slices/api/taskApiSlice';
+import { useDeleteRestoreTaskMutation, useDuplicateTaskMutation, useGetAllTaskQuery, useTrashTaskMutation } from '../../redux/slices/api/taskApiSlice';
 import { toast } from 'sonner';
 
 
-const TaskDialog = ({task, projectId}) => {
+const TaskDialog = ({task, projectId, onDeleted}) => {
   console.log("projectId:", projectId); // 💥 Buraya ekle
 
   const [open, setOpen] = useState(false);
@@ -23,6 +23,22 @@ const TaskDialog = ({task, projectId}) => {
   const navigate = useNavigate();
   const [deleteTask] = useTrashTaskMutation();
   const [duplicateTask] = useDuplicateTaskMutation();
+  const [deleteRestoreTask] = useDeleteRestoreTaskMutation();
+ const { refetch } = useGetAllTaskQuery({
+  stage: "all",
+  isTrashed: false,
+  search: "",
+  projectId,
+}, { skip: !projectId });
+
+const [trashTask] = useTrashTaskMutation();
+
+
+
+if (!projectId) {
+  console.warn("projectId boş, task silme veya refetch çalışmayabilir.");
+  return;
+}
 
   const duplicateHandler = async() => {
     try {
@@ -43,24 +59,30 @@ const TaskDialog = ({task, projectId}) => {
     setOpenDialog(true);
   }; 
 
-  const deleteHandler = async() => {
-    try {
-      const res = await deleteTask({
-        id: task._id,
-        isTrashed: "trash",
-      }).unwrap();
+ const deleteHandler = async () => {
+  if (!task?._id || !projectId) return;
 
-      toast.success(res?.message);
+  try {
+    const deleted = await deleteRestoreTask({
+      taskId: task._id,
+      projectId,
+    }).unwrap();
 
-      setTimeout(() => {
-        setOpenDialog(false);
-        window.location.reload();
-      }, 500);
-    } catch (err) {
-      console.log(err);
-      toast.error(err?.data?.message || err.error);
-    }
-  };
+    console.log("Deleted:", deleted);
+    setOpenDialog(false);
+    setOpen(false);
+    onDeleted?.();  // callback varsa çağır
+
+    refetch(); // görev listesini güncelle
+  } catch (error) {
+    console.log("Delete Error:", error);
+  }
+  await trashTask({ id: task._id, projectId }).unwrap();
+};
+
+
+
+
    
   const items = [
     {
@@ -147,7 +169,8 @@ const TaskDialog = ({task, projectId}) => {
   <AddTask
     open={openEdit}
     setOpen={setOpenEdit}
-    projectId={projectId}
+    project={{ _id: projectId }} // ✅ Bunu ekle: project objesi bekliyor çünkü
+    task={task} // ✅ bu satır eksikti
     key={task._id || "edit-task"}
   />
 )}

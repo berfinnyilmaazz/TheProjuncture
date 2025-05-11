@@ -1,6 +1,6 @@
 import express from "express";
 import { isAdminRoute, protectRoute } from "../middlewares/authMiddlewave.js";
-import { activateUserProfile, changeUserPassword, deleteUserProfile, getAllUsers, getNotificationsList, getTeamList, getUserById, loginUser, logoutUser, markNotificationRead, registerUser, updateUserProfile } from "../controllers/userController.js";
+import { activateUserProfile, changeUserPassword, deleteUserProfile, getAllNotificationsList, getAllUsers, getNotificationsList, getTeamList, getUserById, loginUser, logoutUser, markNotificationRead, registerUser, updateUserProfile } from "../controllers/userController.js";
 
 const router = express.Router();
 
@@ -12,6 +12,8 @@ router.get("/get-team", protectRoute, isAdminRoute, getTeamList);
 router.get("/notifications", protectRoute, getNotificationsList);
 router.get('/', getAllUsers);
 router.get('/:id', getUserById);
+router.get("/notifications/all", protectRoute, getAllNotificationsList);
+
 
 
 router.put("/profile", protectRoute, updateUserProfile);

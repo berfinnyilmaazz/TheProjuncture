@@ -128,6 +128,22 @@ export const getNotificationsList  = async (req, res) => {
     }
 };
 
+// Tüm bildirimi getirir (okunmuş + okunmamış)
+export const getAllNotificationsList = async (req, res) => {
+    try {
+      const { userId } = req.user;
+  
+      const notice = await Notice.find({
+        team: userId
+      }).populate("task", "title");
+  
+      res.status(200).json(notice);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ status: false, message: error.message });
+    }
+};  
+
 export const updateUserProfile = async (req, res) => {
     try {
         const {userId, isAdmin} = req.user

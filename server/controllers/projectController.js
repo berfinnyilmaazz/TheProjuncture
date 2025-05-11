@@ -57,7 +57,6 @@ export const getMyProjects = async (req, res) => {
   res.json(allProjects);
 };
 
-
 export const requestJoinProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -105,7 +104,6 @@ export const requestJoinProject = async (req, res) => {
     res.status(500).json({ message: "Sunucu hatası" });
   }
 };
-
 
 export const approveJoinRequest = async (req, res) => {
   const project = await Project.findById(req.params.id);

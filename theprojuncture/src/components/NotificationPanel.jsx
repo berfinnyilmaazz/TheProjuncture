@@ -7,7 +7,7 @@ import{ HiBellAlert } from "react-icons/hi2"
 import{ IoIosNotificationsOutline } from "react-icons/io"
 import { Link } from 'react-router-dom'
 import ViewNotification from './ViewNotification'
-import { useGetNotificationsQuery, useMarkNotiAsReadMutation } from '../redux/slices/api/userApiSlice'
+import { useGetAllNotificationsQuery, useGetNotificationsQuery, useMarkNotiAsReadMutation } from '../redux/slices/api/userApiSlice'
 
 
 const ICONS = {
@@ -23,8 +23,8 @@ const NotificationPanel = () => {
     const [open, setOpen] =useState(false);
     const[selected, setSelected] = useState(null);
 
-    const { data, refetch } = useGetNotificationsQuery(undefined, {
-        pollingInterval: 5000, // her 5 saniyede bir yenile
+    const { data: allNotifications = [], refetch } = useGetNotificationsQuery(undefined, {
+    pollingInterval: 1000,
     });
       
     const[ markAsRead ] = useMarkNotiAsReadMutation();
@@ -41,25 +41,27 @@ const NotificationPanel = () => {
     };
 
 
-    const callsToAction = [
-        { name: "Cancel", href: "#", icon: ""},
-        {
-            name:"Mark All Read",
-            href: "#",
-            icon: "#",
-            onClick: () => readHandler("all", ""),
-        },
-    ];
+    // const callsToAction = [
+    //     { name: "Cancel", href: "#", icon: ""},
+    //     {
+    //         name:"Mark All Read",
+    //         href: "#",
+    //         icon: "#",
+    //         onClick: () => readHandler("all", ""),
+    //     },
+    // ];
 
   return (
     <div>
         <Popover className="relative">
+        {({ open }) => (
+            <>
             <Popover.Button className="inline-flex items-center outline-none">
                 <div className='w-8 h-8 flex items-center justify-center text-gray-800 relative'>
                     <IoIosNotificationsOutline className='text-2xl' />
-                    {data?.length > 0 && (
+                    {allNotifications?.length > 0 && (
                         <span className='absolute text-center top-0 right-1 text-sm text-white font-semibold w-4 h-4 rounded-full bg-red-600'>
-                            {data?.length}
+                            {allNotifications?.length}
                         </span>
                     )}
                 </div>
@@ -67,6 +69,7 @@ const NotificationPanel = () => {
 
             <Transition
             as={Fragment}
+            show={open}
             enter='transition ease-out duration-200'
             enterFrom='opacity-0 translate-y-1'
             enterTo='opacity-100 translate-y-0'
@@ -76,10 +79,10 @@ const NotificationPanel = () => {
             >
                 <Popover.Panel className="absolute -right-16 md:right-2 z-10 mt-5 flex w-screen max-w-max px-4">
                     {({ close }) =>
-                    data?.length > 0 && (
+                    allNotifications?.length > 0 && (
                         <div className='w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5'>
                             <div className='p-4'>
-                                {data?.slice(0, 5).map((item, index) =>(
+                                {allNotifications?.slice(0, 5).map((item, index) =>(
                                     <div
                                     key={item._id + index}
                                     className='group relative flex gap-x-4 rounded-lg p-4 hover:bg-gray-50'
@@ -106,7 +109,7 @@ const NotificationPanel = () => {
                                 ))}
                             </div>
 
-                            <div className='grid grid-cols-2 divide-x bg-gray-50'>
+                            {/* <div className='grid grid-cols-2 divide-x bg-gray-50'>
                                 {callsToAction.map((item) => (
                                     <Link
                                     key={item.name}
@@ -118,12 +121,23 @@ const NotificationPanel = () => {
                                         {item.name}
                                     </Link>
                                 ))}
+                            </div> */}
+                            <div className='grid grid-cols-2 divide-x bg-gray-50'>
+                                <Link
+                                to="/my-profile?tab=notifications"
+                                onClick={close}
+                                className="text-indigo-600 hover:underline px-4 py-2 block text-sm"
+                                >
+                                Tüm Bildirimleri Gör
+                                </Link>
+                                </div>
                             </div>
-                        </div>
-                    )
+                        )
                     }
                 </Popover.Panel>
             </Transition>
+            </>
+        )}
         </Popover>
 
         <ViewNotification open={open} setOpen={setOpen} el={selected} />

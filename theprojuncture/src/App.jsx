@@ -13,6 +13,7 @@ import Task from "./pages/Task";
 import TaskDetails from "./pages/TaskDetails";
 import UserProfile from "./pages/UserProfile";
 import ProjectDetail from "./pages/ProjectDetail";
+import AllNotifications from "./pages/AllNotifications";
 
 
 function Layout () {
@@ -64,6 +65,7 @@ export default function App() {
             <Route path="/task/:id" element={<TaskDetails />} />
             <Route path="/profile/:id" element={<UserProfile />} />
             <Route path="/project/:id" element={<ProjectDetail />} />
+            <Route path="/notifications" element={<AllNotifications />} />
           </Route>
         )}
       </Routes>
