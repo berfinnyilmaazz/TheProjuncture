@@ -13,7 +13,7 @@ import { useDeleteRestoreTaskMutation, useDuplicateTaskMutation, useGetAllTaskQu
 import { toast } from 'sonner';
 
 
-const TaskDialog = ({task, projectId, onDeleted}) => {
+const TaskDialog = ({task, projectId, onTaskDeleted, refetch}) => {
   console.log("projectId:", projectId); // 💥 Buraya ekle
 
   const [open, setOpen] = useState(false);
@@ -24,14 +24,7 @@ const TaskDialog = ({task, projectId, onDeleted}) => {
   const [deleteTask] = useTrashTaskMutation();
   const [duplicateTask] = useDuplicateTaskMutation();
   const [deleteRestoreTask] = useDeleteRestoreTaskMutation();
- const { refetch } = useGetAllTaskQuery({
-  stage: "all",
-  isTrashed: false,
-  search: "",
-  projectId,
-}, { skip: !projectId });
-
-const [trashTask] = useTrashTaskMutation();
+  const [trashTask] = useTrashTaskMutation();
 
 
 
@@ -69,29 +62,25 @@ if (!projectId) {
     }).unwrap();
 
     console.log("Deleted:", deleted);
+    await trashTask({ id: task._id, projectId }).unwrap();
     setOpenDialog(false);
     setOpen(false);
-    onDeleted?.();  // callback varsa çağır
-
-    refetch(); // görev listesini güncelle
+    if (onTaskDeleted) onTaskDeleted(); // ✅ doğru ismi çağır
+    toast.success("Görev başarıyla silindi.");
+  
   } catch (error) {
     console.log("Delete Error:", error);
   }
-  await trashTask({ id: task._id, projectId }).unwrap();
 };
-
-
-
-
    
   const items = [
     {
-      label: "Open Task",
+      label: "Detaylar",
       icon: <AiTwotoneFolderOpen className='mr-2 h-5 w-5' aria-hidden='true' />,
       onClick: () => navigate(`/task/${task._id}`),
     },
     {
-      label: "Edit",
+      label: "Güncelle",
       icon: <MdOutlineEdit className='mr-2 h-5 w-5' aria-hidden='true' />,
       onClick: () => setOpenEdit(true),
     },
@@ -156,7 +145,7 @@ if (!projectId) {
                         className='mr-2 h-5 w-5 text-red-400'
                         aria-hidden='true'
                       />
-                      Delete
+                      Sil
                     </button>
                   )}
                 </Menu.Item>
@@ -165,15 +154,15 @@ if (!projectId) {
           </Transition>
         </Menu>
       </div>
-      {task && projectId && (
-  <AddTask
-    open={openEdit}
-    setOpen={setOpenEdit}
-    project={{ _id: projectId }} // ✅ Bunu ekle: project objesi bekliyor çünkü
-    task={task} // ✅ bu satır eksikti
-    key={task._id || "edit-task"}
-  />
-)}
+          {task && projectId && (
+            <AddTask
+              open={openEdit}
+              setOpen={setOpenEdit}
+              project={{ _id: projectId }} // ✅ Bunu ekle: project objesi bekliyor çünkü
+              task={task} // ✅ bu satır eksikti
+              key={task._id || "edit-task"}
+            />
+          )}
 
 
 
@@ -183,6 +172,7 @@ if (!projectId) {
         open={openDialog}
         setOpen={setOpenDialog}
         onClick={deleteHandler}
+        onTaskDeleted={onTaskDeleted}
       />
     </>
   )

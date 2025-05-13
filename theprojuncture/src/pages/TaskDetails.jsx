@@ -124,7 +124,7 @@ const TaskDetails = () => {
               >
                 <span className='text-lg'>{ICONS[task?.priority]}</span>
                 <span className='uppercase'>{task?.priority} Priority</span>
-              </div>
+              </div> 
               <div className={clsx("flex items-center gap-2")}>
               <div className={clsx("w-4 h-4 rounded-full",
                 TASK_TYPE[task?.stage]
@@ -300,7 +300,6 @@ const Activities =({activity, id, refetch}) => {
           </div>
           <div className='text-gray-700'>{item?.activity}</div>
         </div>
-
       </div>
     )
   };

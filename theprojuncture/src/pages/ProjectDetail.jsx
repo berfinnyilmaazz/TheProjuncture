@@ -36,7 +36,7 @@ const ProjectDetail = () => {
         <img
           src={project.image || "/projectimg1.png"}
           alt={project.title}
-          className="w-full h-[320px] object-cover"
+          className="w-full h-[320px] object-contain"
         />
 
         {/* İçerik */}

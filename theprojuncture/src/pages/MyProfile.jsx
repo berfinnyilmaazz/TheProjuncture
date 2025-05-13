@@ -63,7 +63,7 @@ const [activeTab, setActiveTab] = useState(initialTab);
     email: user?.email || "Email yok",
     title: user?.title || "Meslek belirtilmemiş",
     bio: user?.bio || "Biyografi bulunamadı",
-    avatar: "/profileimg.png",
+    avatar: user?.avatar || "/profileimg.png",
   };
 
   
@@ -73,60 +73,58 @@ const [activeTab, setActiveTab] = useState(initialTab);
       <div className="container max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Profil</h1>
-          
+          <h1 className="text-2xl font-bold text-gray-900">Profil</h1>         
         </div>
 
         {/* Profile Info */}
         <div className="bg-white rounded-xl shadow p-6 mb-10 flex flex-col md:flex-row md:items-start gap-8">
-  {/* Sol: Avatar */}
-  <div className="w-32 h-32 rounded-full overflow-hidden">
-    <img src={userProfile.avatar} alt={userProfile.name} className="w-full h-full object-cover" />
-  </div>
+          {/* Sol: Avatar */}
+          <div className="w-32 h-32 rounded-full overflow-hidden">
+            <img src={userProfile.avatar} alt={userProfile.name} className="w-full h-full object-cover" />
+          </div>
 
-  {/* Orta: Bilgiler */}
-  <div className="flex-1">
-    <h2 className="text-xl font-bold text-gray-900">{userProfile.name}</h2>
-    <p className="text-gray-600">{userProfile.title}</p>
-    {user?.showEmail && (
-      <p className="text-gray-500 text-sm">{user.email}</p>
-    )}
-    {user?.showTelephone && (
-      <p className="text-gray-500 text-sm">Telefon: {user.telephone}</p>
-    )}
-    {user?.showLocation && (
-      <p className="text-gray-500 text-sm">Konum: {user.location}</p>
-    )}
-    <p className="mt-2 text-gray-700 max-w-xl">{userProfile.bio}</p>
-  </div>
+          {/* Orta: Bilgiler */}
+          <div className="flex-1">
+            <h2 className="text-xl font-bold text-gray-900">{userProfile.name}</h2>
+            <p className="text-gray-600">{userProfile.title}</p>
+            {user?.showEmail && (
+              <p className="text-gray-500 text-sm">{user.email}</p>
+            )}
+            {user?.showTelephone && (
+              <p className="text-gray-500 text-sm">Telefon: {user.telephone}</p>
+            )}
+            {user?.showLocation && (
+              <p className="text-gray-500 text-sm">Konum: {user.location}</p>
+            )}
+            <p className="mt-2 text-gray-700 max-w-xl">{userProfile.bio}</p>
+          </div>
 
-  {/* Sağ: Sosyal Medya Linkleri */}
-  {user?.showSocialLinks && (
-    <div className="min-w-[150px] flex flex-col gap-2">
-      {user.socialLinks?.github && (
-        <a href={user.socialLinks.github} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
-          GitHub
-        </a>
-      )}
-      {user.socialLinks?.linkedin && (
-        <a href={user.socialLinks.linkedin} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
-          LinkedIn
-        </a>
-      )}
-      {user.socialLinks?.instagram && (
-        <a href={user.socialLinks.instagram} target="_blank" rel="noreferrer" className="text-pink-500 hover:underline">
-          Instagram
-        </a>
-      )}
-      {user.socialLinks?.twitter && (
-        <a href={user.socialLinks.twitter} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">
-          X (Twitter)
-        </a>
-      )}
-    </div>
-  )}
+          {/* Sağ: Sosyal Medya Linkleri */}
+          {user?.showSocialLinks && (
+            <div className="min-w-[150px] flex flex-col gap-2">
+              {user.socialLinks?.github && (
+                <a href={user.socialLinks.github} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                  GitHub
+                </a>
+              )}
+              {user.socialLinks?.linkedin && (
+                <a href={user.socialLinks.linkedin} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
+                  LinkedIn
+                </a>
+              )}
+              {user.socialLinks?.instagram && (
+                <a href={user.socialLinks.instagram} target="_blank" rel="noreferrer" className="text-pink-500 hover:underline">
+                  Instagram
+                </a>
+              )}
+              {user.socialLinks?.twitter && (
+                <a href={user.socialLinks.twitter} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">
+                  X (Twitter)
+                </a>
+              )}
+            </div>
+          )}
         </div>
-
 
         {/* Tabs */}
         <div className="border-b border-gray-200 mb-6">
@@ -219,7 +217,7 @@ const [activeTab, setActiveTab] = useState(initialTab);
             <p className="text-gray-500">Bu kategoride hiç bildirim yok.</p>
           ) : (
             <ul className="space-y-3">
-              {filteredNotifications.map((noti) => (
+              {[...filteredNotifications].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((noti) => (
                 <li
                   onClick={() => {
                     setSelectedNotification(noti);

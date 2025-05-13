@@ -51,27 +51,24 @@ const onDeleted = () => {
                     <span className='uppercase'>{task?.priority} Priority</span>
             </div>
             <TaskDialog
-  
-  task={task}
-  projectId={projectId}
-  onDeleted={refetch}
-/>
+                task={task}
+                projectId={projectId}
+                onTaskDeleted={refetch}
+            />
 
 
 
         </div>
-
-        <>
+            <>
             <div className='flex items-center gap-2'>
                 <div className={clsx("w-4 h-4 rounded-full", TASK_TYPE[task.stage])} 
                 />
-
                 <h4 className='line-clamp-1 text-black'>{task?.title}</h4>
             </div>
-            <span className='text-sm text-gray-600'>
-                {formatDate(new Date(task?.date))}
-            </span>
-        </> 
+                <span className='text-sm text-gray-600'>
+                    {formatDate(new Date(task?.date))}
+                </span>
+            </> 
 
         <div className='w-full border-t border-gray-200 my-2' />
         <div className='flex items-center justify-between mb-2'>
@@ -100,7 +97,7 @@ const onDeleted = () => {
                 >
                     <UserInfo user={m}/>
                 </div>
-            ))}
+                ))}
             </div>
         </div>
 

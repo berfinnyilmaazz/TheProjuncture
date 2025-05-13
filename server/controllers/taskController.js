@@ -15,9 +15,9 @@ export const createTask = async (req, res) => {
 
         text = 
             text + 
-            `The task priority is set a ${priority} priority, so check and act accordingly.The task date is ${new Date(
+            `Task priority ${priority} priority olarak ayarlanmış,bu nedenle buna göre kontrol edip harekete geçin.Task tarihi: ${new Date(
             date
-            ).toDateString()}.Thank you!!!`;
+            ).toDateString()}.Teşekkürler!!!`;
 
         const activity = {
             type: "assigned",

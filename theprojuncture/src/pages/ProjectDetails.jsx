@@ -153,14 +153,11 @@ export default function ProjectDetails() {
         
         <h2 className="text-2xl font-bold mb-5">{currentProject.title}</h2>
         <img
-          src={currentProject.image || './projectimg1.jpg'}
+          src={currentProject.image || '/projectimg1.png'}
           alt={currentProject.title}
           className="w-full max-h-64 object-contain rounded-t mb-5"
         />
-        <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
-          <p><strong>Başlangıç:</strong> {currentProject.startDate}</p>
-          <p><strong>Bitiş:</strong> {currentProject.endDate}</p>
-        </div>
+        
         <p className="mt-5 text-gray-800">{currentProject.description}</p>
 
 

@@ -1,7 +1,7 @@
 import express from "express";
 import { isAdminRoute, protectRoute } from "../middlewares/authMiddlewave.js";
 import { activateUserProfile, changeUserPassword, deleteUserProfile, getAllNotificationsList, getAllUsers, getNotificationsList, getTeamList, getUserById, loginUser, logoutUser, markNotificationRead, registerUser, updateUserProfile } from "../controllers/userController.js";
-
+ 
 const router = express.Router();
 
 router.post("/register", registerUser); 

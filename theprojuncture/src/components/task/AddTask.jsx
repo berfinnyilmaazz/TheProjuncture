@@ -21,7 +21,7 @@ const PRIORITY = ["HIGH", "MEDIUM", "NORMAL", "LOW"];
 
 const uploadedFileURLs = [];
 
-const AddTask = ({open, setOpen, task, project}) => {
+const AddTask = ({open, setOpen, task, project, onTaskAdded}) => {
 
   const [selected, setSelected] = useState("");
 
@@ -61,16 +61,16 @@ const AddTask = ({open, setOpen, task, project}) => {
     const URLS = task?.assets ? [...task.assets] : [];
 
     useEffect(() => {
-  if (task) {
-    reset({
-      title: task.title || "",
-      date: dateFormatter(task.date || new Date()),
-    });
-    setTeam(task.team || []);
-    setStage(task.stage?.toUpperCase() || LISTS[0]);
-    setPriority(task.priority?.toUpperCase() || PRIORITY[2]);
-  }
-}, [task, reset]);
+      if (task) {
+        reset({
+          title: task.title || "",
+          date: dateFormatter(task.date || new Date()),
+        });
+        setTeam(task.team || []);
+        setStage(task.stage?.toUpperCase() || LISTS[0]);
+        setPriority(task.priority?.toUpperCase() || PRIORITY[2]);
+      }
+    }, [task, reset]);
 
 
     const submitHandler = async(data) => {
@@ -102,7 +102,7 @@ const AddTask = ({open, setOpen, task, project}) => {
         : await createTask(newData).unwrap();
 
         toast.success(res.message);
-
+        if (onTaskAdded) onTaskAdded(); // ✅ refetch'i çağır
         setTimeout(() => {
           setOpen(false);
         }, 500);
@@ -111,6 +111,8 @@ const AddTask = ({open, setOpen, task, project}) => {
         toast.error(err?.data?.message || err.error);
       }
     };
+
+    
 
     console.log(project?._id)
 
@@ -157,19 +159,19 @@ const AddTask = ({open, setOpen, task, project}) => {
             as='h2'
             className='text-base font-bold leading-6 text-gray-900 mb-4'
           >
-            {task ? "UPDATE TASK" : "ADD TASK"}
+            {task ? "TASK GÜNCELLE" : "TASK EKLE"}
           </Dialog.Title>
 
           <div className='mt-2 flex flex-col gap-6'>
             <Textbox
-              placeholder='Task Title'
+              placeholder='Task Başlığı'
               type='text'
               name='title'
-              label='Task Title'
+              label='Task Başlığı'
               className='w-full rounded'
-              register={register("title", { required: "Title is required" })}
+              register={register("title", { required: "Başlık gerekli" })}
               error={errors.title ? errors.title.message : ""}
-            />
+          />
 
             <UserList
               team={team}
@@ -179,7 +181,7 @@ const AddTask = ({open, setOpen, task, project}) => {
 
             <div className='flex gap-4'>
               <SelectList
-                label='Task Stage'
+                label='Task Aşaması'
                 //lists={assignableUsers.map(user => `${user.name} - ${user.title}`)}
                 lists={LISTS}
                 selected={stage}
@@ -188,10 +190,10 @@ const AddTask = ({open, setOpen, task, project}) => {
 
               <div className='w-full'>
                 <Textbox
-                  placeholder='Date'
+                  placeholder='Tarih'
                   type='date'
                   name='date'
-                  label='Task Date'
+                  label='Tarih'
                   className='w-full rounded'
                   register={register("date", {
                     required: "Date is required!",
@@ -203,7 +205,7 @@ const AddTask = ({open, setOpen, task, project}) => {
 
             <div className='flex gap-4'>
               <SelectList
-                label='Priority Level'
+                label='Öncelik Seviyesi'
                 lists={PRIORITY}
                 selected={priority}
                 setSelected={setPriority}
@@ -235,7 +237,7 @@ const AddTask = ({open, setOpen, task, project}) => {
                 </span>
               ) : (
                 <Button
-                  label='Submit'
+                  label='Kaydet'
                   type='submit'
                   className='bg-blue-600 px-8 text-sm font-semibold text-white hover:bg-blue-700  sm:w-auto'
                 />
@@ -245,7 +247,7 @@ const AddTask = ({open, setOpen, task, project}) => {
                 type='button'
                 className='bg-white px-5 text-sm font-semibold text-gray-900 sm:w-auto'
                 onClick={() => setOpen(false)}
-                label='Cancel'
+                label='İptal'
               />
             </div>
             

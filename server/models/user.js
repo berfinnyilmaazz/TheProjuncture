@@ -14,6 +14,7 @@ const userSchema = new Schema({
     tasks: [{type: Schema.Types.ObjectId, ref:"Task"}],
     isActive: { type: Boolean, required:false, default: true },
     bio: { type: String, required: false }, // ← burası yeni
+    avatar: { type: String, default: "" },
 
     socialLinks: {
         github: { type: String, default: "" },

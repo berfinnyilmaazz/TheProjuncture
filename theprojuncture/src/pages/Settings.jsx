@@ -13,12 +13,16 @@ import Button from '../components/Button';
 import Loading from '../components/Loading';
 import { toast } from 'sonner';
 import { useSelector } from "react-redux";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { uploadImageToFirebase } from "../utils/uploadImageToFirebase";
+ // senin firebase config'in buraya bağlı olmalı
 
 
 export default function Profile() {
     const [activeTab, setActiveTab] = useState('profile');
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [avatarFile, setAvatarFile] = useState(null);
 
     const { user } = useSelector((state) => state.auth);
 
@@ -82,6 +86,7 @@ export default function Profile() {
           setValue("telephone", user.telephone);
           setValue("location", user.location);
           setValue("bio", user.bio);
+          setValue("avatar", user.avatar);
 
           setValue("socialLinks.github", user.socialLinks?.github || "");
           setValue("socialLinks.linkedin", user.socialLinks?.linkedin || "");
@@ -100,11 +105,43 @@ export default function Profile() {
 
       const [updateProfile] = useUpdateUserMutation();
 
+      const onAvatarChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const avatarUrl = await uploadImageToFirebase(file,"avatars");
+            console.log("✅ Yüklenen avatar URL:", avatarUrl);
+
+            const result = await updateProfile({ avatar: avatarUrl }).unwrap();
+            dispatch(setCredentials(result.user));
+            toast.success("Profil resmi güncellendi!");
+        } catch (err) {
+            console.error("Avatar yükleme hatası:", err);
+            toast.error("Profil resmi güncellenemedi.");
+        }
+    };
+
+
       const onProfileUpdate = async (data) => {
         try {
-          const result = await updateProfile(data).unwrap();
+            let avatarUrl = user?.avatar;
+
+            if (avatarFile) {
+                avatarUrl = await uploadImageToFirebase(avatarFile, "avatars"); // ✅ avatars klasörüne
+                console.log("✅ Yüklenen avatar URL:", avatarUrl);
+            }
+            console.log("Yüklenen resim URL:", avatarUrl);
+            console.log("✅ Gönderilecek avatar URL:", avatarUrl);
+            console.log("📤 Backend'e gönderilen data:", { ...data, avatar: avatarUrl });
+
+
+
+          const result = await updateProfile({...data, avatar: avatarUrl}).unwrap();
           toast.success("Profil başarıyla güncellendi!");
           dispatch(setCredentials(result.user)); // Redux güncelle
+          console.log("🧠 Redux’a gönderilecek kullanıcı:", result.user);
+
           navigate("/my-profile");
         } catch (error) {
           toast.error(error?.data?.message || "Güncelleme başarısız");
@@ -122,16 +159,27 @@ export default function Profile() {
                         <div className="bg-white rounded-2xl shadow-md p-6">
                             {/* Profile Summary */}
                             <div className="flex flex-col items-center pb-6 border-b border-gray-200">
-                                <div className="relative">
+                                <div className="relative group">
                                     <img
-                                        src={user?.avatar || "https://via.placeholder.com/150"}
+                                        src={user?.avatar || "/profileimg.png"}
                                         alt="Profile"
                                         className="w-24 h-24 rounded-full object-cover"
                                     />
-                                    <button className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors">
+
+                                    {/* INPUT dosya seçici */}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        className="absolute bottom-0 right-0 w-10 h-10 opacity-0 cursor-pointer z-10"
+                                        title="Profil resmi yükle"
+                                        onChange={onAvatarChange}
+                                    />
+
+                                    <div className="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full pointer-events-none">
                                         <FiEdit2 className="w-4 h-4" />
-                                    </button>
+                                    </div>
                                 </div>
+
                                 <h2 className="mt-4 text-xl font-semibold text-gray-900">{user?.name || "Bilinmeyen Kullanıcı"}</h2>
                                 <p className="text-gray-500">{user?.title || "Görev belirtilmemiş"}</p>
 

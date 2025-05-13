@@ -35,9 +35,6 @@ export const TASK_TYPE = {
     const [selected, setSelected] = useState (0);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    //const {status, projectId} = params?.status || "";
-
     const { data: taskData = [], isLoading, refetch } = useGetAllTaskQuery({
       stage: "all",
       isTrashed: false,
@@ -45,34 +42,22 @@ export const TASK_TYPE = {
       projectId,
     });
 
-const navigate = useNavigate();
-const user = useSelector((state) => state.auth.user);
+    const navigate = useNavigate();
+    const user = useSelector((state) => state.auth.user);
 
-const { data: project, isLoading: isProjectLoading } = useGetProjectByIdQuery(projectId, {
-  skip: !projectId,
-});
+    const { data: project, isLoading: isProjectLoading } = useGetProjectByIdQuery(projectId, {
+      skip: !projectId,
+    });
 
-if (isProjectLoading) return <p>Yükleniyor...</p>;
+    if (isProjectLoading) return <p>Yükleniyor...</p>;
 
-// Erişim kontrolü
-// const isOwner = project?.owner?._id === userInfo?._id;
-// const isMember = project?.members?.some((member) =>
-//   typeof member === "object"
-//     ? member._id === userInfo._id
-//     : member === userInfo._id
-// );
+    if (project?.owner?._id !== user?._id && !project?.members?.some(m => m._id === user?._id)) {
+      return <p className="text-red-500">Bu projeye erişim yetkiniz yok.</p>;
+    }
 
-
-if (project?.owner?._id !== user?._id && !project?.members?.some(m => m._id === user?._id)) {
-  return <p className="text-red-500">Bu projeye erişim yetkiniz yok.</p>;
-}
-
-
-if (!projectId) {
-  return <div>Hatalı yönlendirme: Proje bilgisi yok.</div>;
-}
-  
-
+    if (!projectId) {
+      return <div>Hatalı yönlendirme: Proje bilgisi yok.</div>;
+    }
       return isLoading ? (
         <div className='py-10'>
           <Loading />
@@ -84,7 +69,7 @@ if (!projectId) {
             {
               !status && (
               <Button
-              onClick={() => setOpen(true)}
+                onClick={() => setOpen(true)}
                 label="Task Ekle"
                 icon={<IoMdAdd className="text-lg" />}
                 className="flex flex-row-reverse gap-1 items-center bg-blue-600 text-white rounded-md py-2 2xl:py-2.5"
@@ -104,22 +89,22 @@ if (!projectId) {
 
               
               {taskData?.tasks?.length > 0 ? (
-  <BoardView
-    task={taskData?.tasks.filter((t) => !t.isTrashed)} // << sadece silinmemişleri gönderiyoruz
-    projectId={projectId}
-    onTaskDeleted={refetch}
-  />
-) : (
-  <p className="text-gray-500 text-center py-10">Henüz görev yok.</p>
-)}
-
-
-
-              
+              <BoardView
+                task={taskData?.tasks.filter((t) => !t.isTrashed)} // << sadece silinmemişleri gönderiyoruz
+                projectId={projectId}
+                onTaskDeleted={refetch}
+              />
+              ) : (
+                <p className="text-gray-500 text-center py-10">Henüz görev yok.</p>
+              )}             
             </Tabs>
 
-            <AddTask open={open} setOpen={setOpen} project={project} />
-
+            <AddTask 
+              open={open} 
+              setOpen={setOpen} 
+              project={project}
+              onTaskAdded={refetch} 
+            />
           </div>
         </div>
       );

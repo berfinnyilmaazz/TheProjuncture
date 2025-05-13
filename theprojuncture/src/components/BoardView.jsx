@@ -9,7 +9,7 @@ const BoardView = ({task, projectId, refetch}) => {
               task={task} 
               key={index} 
               projectId={projectId} 
-              onDeleted={() => {refetch();}}
+              onTaskDeleted={refetch}
             />
         ))}
     </div> 

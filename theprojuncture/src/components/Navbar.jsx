@@ -1,16 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import logo from '/logo2.png';
 import { FiSearch, FiMenu, FiX, FiUser } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import UserAvatar from './UserAvatar';
 import { useSelector } from 'react-redux';
 import NotificationPanel from './NotificationPanel';
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     // const [isAuthenticated, setIsAuthenticated] = useState(false);
     const { user } = useSelector((state) => state.auth) || {};
     console.log(user);
+
+    const [query, setQuery] = useState("");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (query.trim() !== "") {
+            navigate(`/search?q=${query.trim()}`);
+            }
+        }, 500); // 0.5 saniye sonra yönlendir
+
+        return () => clearTimeout(timeout); // eskiyi iptal et
+    }, [query]);
+
+    const handleSearch = (e) => {
+    if (e.key === "Enter" && query.trim() !== "") {
+        navigate(`/search?q=${query.trim()}`);
+        setQuery(""); // input temizlensin
+        }
+    };
 
 
     return (
@@ -38,6 +59,9 @@ export default function Navbar() {
                         <div className="relative w-full">
                             <input
                                 type="search"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                //onKeyDown={handleSearch}
                                 placeholder="Projuncture'da Arayın"
                                 className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             />

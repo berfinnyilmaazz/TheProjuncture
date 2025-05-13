@@ -41,7 +41,11 @@ const joinedProjects = user?._id
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-10">
       <div className="flex flex-col md:flex-row gap-6">
-        <img src="/profileimg.png" alt={user.name} className="w-40 h-40 rounded-full object-cover" />
+        <img 
+          src={user.avatar || "/profileimg.png"}
+          alt={user.name} 
+          className="w-40 h-40 rounded-full object-cover" 
+        />
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{user.name}</h2>
           <p className="text-gray-600">{user.title}</p>

@@ -32,7 +32,7 @@ const UserList = ({setTeam, team, projectId}) => {
 
   return (
     <div>
-        <p className='text-gray-700'>Assign Task To: </p>
+        <p className='text-gray-700'>Bu Kişiye Task Ataması yap: </p>
         <Listbox
             value={selectedUsers}
             onChange={(el) => handleChange(el)}
@@ -43,7 +43,7 @@ const UserList = ({setTeam, team, projectId}) => {
             <span className='block truncate'>
   {selectedUsers.length > 0
     ? selectedUsers.map((user) => user.name).join(", ")
-    : "Select users"}
+    : "Üye Seç"}
 </span>
 
 

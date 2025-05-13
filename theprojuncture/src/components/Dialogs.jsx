@@ -4,7 +4,7 @@ import { FaQuestion } from "react-icons/fa";
 import ModalWrapper from "./ModalWrapper";
 import Button from "./Button";
 
-export default function ConfirmatioDialog({
+export default function ConfirmatioDialog({ 
   open,
   setOpen,
   msg,
@@ -12,11 +12,14 @@ export default function ConfirmatioDialog({
   onClick = () => {},
   type = "delete",
   setType = () => {},
+  onTaskDeleted, 
+  refetch
 }) {
   const closeDialog = () => {
     setType("delete");
     setMsg(null);
     setOpen(false);
+    if (onTaskDeleted) onTaskDeleted(); // ✅ doğru ismi çağır
   };
 
   return (

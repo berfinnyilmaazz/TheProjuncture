@@ -4,7 +4,7 @@ import { useCreateProjectMutation } from "../redux/slices/api/projectApiSlice";
 import { useNavigate } from "react-router-dom";
 import { uploadImageToFirebase } from "../utils/uploadImageToFirebase";
 
-export default function PublishProject() {
+export default function PublishProject() { 
 
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [createProject] = useCreateProjectMutation();
@@ -16,7 +16,7 @@ export default function PublishProject() {
       let imageUrl = "";
   
       if (imageFile) {
-        imageUrl = await uploadImageToFirebase(imageFile);
+        iimageUrl = await uploadImageToFirebase(imageFile, "projects");
       }
   
       const formatted = {

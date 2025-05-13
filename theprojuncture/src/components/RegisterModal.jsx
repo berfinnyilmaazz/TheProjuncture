@@ -36,7 +36,7 @@ const RegisterModal = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl w-[95%] max-w-md p-6 shadow-lg relative animate-fade-in">
+      <div className="bg-white rounded-xl w-[95%] max-w-md max-h-[90vh] overflow-y-auto p-6 shadow-lg relative animate-fade-in scrollbar-thin scrollbar-thumb-gray-400">
         <button
           className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl"
           onClick={onClose}

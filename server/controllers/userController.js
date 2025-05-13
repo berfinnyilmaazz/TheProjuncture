@@ -165,6 +165,9 @@ export const updateUserProfile = async (req, res) => {
                 user.telephone = req.body.telephone || user.telephone;
                 user.location = req.body.location || user.location;
                 user.bio = req.body.bio || user.bio;
+                user.avatar = req.body.avatar || user.avatar;
+
+                console.log("🎯 Gelen avatar:", req.body.avatar);
 
                 user.socialLinks = {
                     github: req.body.socialLinks?.github || "",
@@ -185,9 +188,11 @@ export const updateUserProfile = async (req, res) => {
                   
                 // user.showSocialLinks = req.body.showSocialLinks ?? user.showSocialLinks;
 
-                const updatedUser = await user.save()
+                await user.save()
 
                 user.password = undefined;
+
+                const updatedUser = await User.findById(user._id).select('-password');
 
                 res.status(201).json({
                     status: true,
@@ -303,7 +308,7 @@ export const deleteUserProfile = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
     try {
-      const users = await User.find({}, 'name title'); // sadece name ve title getir
+      const users = await User.find().select("-password");
       res.status(200).json(users);
     } catch (error) {
       res.status(500).json({ message: error.message });
